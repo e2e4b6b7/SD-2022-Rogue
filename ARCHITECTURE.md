@@ -59,7 +59,7 @@ Hollow Rogue -- это игра в жанре roguelike с тайловой гр
 
 ### Описание типичного пользователя
 
-<img src="user.jpeg" alt="drawing" style="width:200px;"/>
+<img src="user.jpeg" alt="drawing" style="width:400px;"/>
 
 Жорик, 31 год. Работает сисадмином в крупной компании. 
 Увлекается компьютерными играми в жанре roguelike.
