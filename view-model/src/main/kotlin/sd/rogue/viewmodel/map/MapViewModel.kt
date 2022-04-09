@@ -19,8 +19,6 @@ class MapViewModel {
         }
     }
 
-    fun map() = fieldMutable
-
     fun move(dx: Int, dy: Int) {
         fieldMutable.remove(x, y, hero)
         x += dx
