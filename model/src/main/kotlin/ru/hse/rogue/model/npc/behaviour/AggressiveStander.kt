@@ -7,8 +7,8 @@ import ru.hse.rogue.model.map.Position
 object AggressiveStander: Behaviour {
     override fun doAnythingOrNotDo(modelConnection: ModelConnection, character: Character) {
         val charPos: Position = modelConnection.getSearchablePos(character.getId()) ?: return
-        val potentialVictims = modelConnection.getMap().getPotentialCharactersForAttack(charPos)
+        val potentialVictims = modelConnection.getPotentialCharactersForAttack(charPos)
         if (potentialVictims.isNotEmpty())
-            modelConnection.tryAttack(character.getId(), potentialVictims.random().getId())
+            modelConnection.tryAttack(character.getId(), potentialVictims.random())
     }
 }
