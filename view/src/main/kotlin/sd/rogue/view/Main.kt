@@ -5,7 +5,6 @@ import sd.rogue.view.assets.Assets
 import sd.rogue.view.timers.SleepingTimer
 import sd.rogue.viewmodel.viewModelModule
 import java.awt.GraphicsEnvironment
-import java.lang.System.currentTimeMillis
 import java.nio.file.Path
 import javax.swing.JFrame
 
@@ -15,12 +14,8 @@ typealias LayoutFactory = () -> Layout
 
 fun repaintCycle(frame: JFrame) {
     val timer = SleepingTimer(15)
-    var p = currentTimeMillis()
     while (true) {
         timer.await()
-        val c = currentTimeMillis()
-        if (c - p > 16) println(c - p)
-        p = c
         frame.repaint()
     }
 }
