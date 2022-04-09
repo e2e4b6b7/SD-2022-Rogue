@@ -13,8 +13,8 @@ class Character(private var maxHealth: UInt): Searchable {
 
     private val _clothes = mutableListOf<Cloth>()
     val clothes: List<Cloth> = _clothes
-    var curCloth: Cloth? = null
-    private set
+    private val _curClothes = mutableListOf<Cloth>()
+    val curClothes: List<Cloth> = _curClothes
 
     private fun healthDecrease(harm: UInt): Boolean {
         if (curHealth == 0u)
@@ -47,12 +47,16 @@ class Character(private var maxHealth: UInt): Searchable {
         }
     }
 
-    fun wear(cloth: Cloth) {
-        curCloth = cloth
+    fun wear(clothListIndex: Int) {
+        _curClothes.add(clothes[clothListIndex])
     }
 
-    fun useArm(arm: Arm) {
-        curArm = arm
+    fun takeOff(curClothListIndex: Int) {
+        _curClothes.removeAt(curClothListIndex)
+    }
+
+    fun useArm(armListIndex: Int) {
+        curArm = arms[armListIndex]
     }
 
     fun attack(other: Character) {
