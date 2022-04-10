@@ -5,6 +5,7 @@ import ru.hse.rogue.model.gameobject.Wall
 import ru.hse.rogue.model.gameobject.character.Character
 import ru.hse.rogue.model.map.GameMap
 
+/** Class for random generation of levels */
 object LevelGenerator {
 
     private const val MIN_ROOM_SIZE = 5
@@ -12,11 +13,13 @@ object LevelGenerator {
     private val RANGE_HEALTH = (60u .. 120u)
     private const val PLAYER_HEALTH = 100u
 
-    fun generateRandomLevel(enemies: Int, width: Int, height: Int): Level {
+    /** Generate level with no more than [enemiesCount] enemies and map with sizes ([width], [height]) */
+    fun generateRandomLevel(enemiesCount: Int, width: Int, height: Int): Level {
         val map = GameMap(width, height)
         val player = Character(PLAYER_HEALTH)
         val level = Level(map, player)
-        buildLevel(level, enemies)
+        buildLevel(level, enemiesCount)
+        addPlayer(level)
         return level
     }
 
@@ -29,6 +32,18 @@ object LevelGenerator {
         }
         return false
     }
+
+    private fun addPlayer(level: Level) {
+        for (x in (1 until level.map.width)) {
+            for (y in (1 until level.map.height)) {
+                if (level.map[x, y].last() is FreeSpace) {
+                    level.map[x, y] = level.player
+                    break
+                }
+            }
+        }
+    }
+
     private fun spawnEnemies(widthLeft: Int, widthRight: Int,
                              heightLeft: Int, heightRight: Int, level: Level
     ) {
