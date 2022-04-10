@@ -5,6 +5,9 @@ import java.awt.Dimension
 import javax.swing.JPanel
 
 
+/**
+ * Main layout with characteristics, inventory and map.
+ */
 class MainLayout : Layout() {
     init {
         val characteristicsView = CharacteristicsView()

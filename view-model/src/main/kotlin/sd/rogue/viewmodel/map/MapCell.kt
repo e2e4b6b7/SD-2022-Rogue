@@ -1,5 +1,8 @@
 package sd.rogue.viewmodel.map
 
+/**
+ * Elements on single map state sorted in priority order.
+ */
 class MapCell : Iterable<MapElement> {
     private val elements = mutableListOf<MapElement>()
 

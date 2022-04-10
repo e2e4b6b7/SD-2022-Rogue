@@ -7,7 +7,9 @@ import sd.rogue.viewmodel.inventory.InventoryViewModel
 import java.awt.*
 import javax.swing.JComponent
 
-
+/**
+ * View displaying component with player's inventory.
+ */
 class InventoryView : JComponent(), KoinComponent {
     private val model: InventoryViewModel = get()
     private val background = Assets.get("Inventory Background")

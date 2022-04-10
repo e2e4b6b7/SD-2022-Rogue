@@ -1,5 +1,8 @@
 package sd.rogue.viewmodel
 
+/**
+ * Default manager for controlling subscriptions and triggering actions.
+ */
 class EventManager<T> {
     private val subscribers = mutableListOf<(T) -> Unit>()
 

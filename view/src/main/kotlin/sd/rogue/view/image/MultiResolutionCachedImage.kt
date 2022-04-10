@@ -3,6 +3,10 @@ package sd.rogue.view.image
 import java.awt.Image
 import java.awt.image.AbstractMultiResolutionImage
 
+
+/**
+ * Wrapper of image for caching of scaling.
+ */
 class MultiResolutionCachedImage(private val baseImg: Image) : AbstractMultiResolutionImage() {
     private val cache = mutableMapOf<Resolution, Image>()
 

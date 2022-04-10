@@ -6,6 +6,10 @@ import sd.rogue.viewmodel.LayoutID
 import sd.rogue.viewmodel.LayoutViewModel
 import javax.swing.JFrame
 
+
+/**
+ * Controller of current layouts stack and tranfer of control between them.
+ */
 class LayoutController(private val frame: JFrame) : KoinComponent {
     private val layoutStack = Stack<Layout>()
     private val factories = HashMap<LayoutID, LayoutFactory>()
@@ -20,10 +24,16 @@ class LayoutController(private val frame: JFrame) : KoinComponent {
         }
     }
 
+    /**
+     * Register layout with specified id.
+     */
     fun registerLayout(id: LayoutID, factory: LayoutFactory) {
         factories[id] = factory
     }
 
+    /**
+     * Set first layout before displaying.
+     */
     fun initialize(initialLayoutID: LayoutID) {
         addLayout(initialLayoutID)
         activateLayout()
