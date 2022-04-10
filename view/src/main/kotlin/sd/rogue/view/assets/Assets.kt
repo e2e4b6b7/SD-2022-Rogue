@@ -8,6 +8,9 @@ import sd.rogue.view.paintable.serialization.PaintableSerialized
 import java.nio.file.Path
 import kotlin.io.path.readText
 
+/**
+ * Object responsible for uploading and managing of assets from config.
+ */
 object Assets {
     private val assets = mutableMapOf<String, Paintable>()
 

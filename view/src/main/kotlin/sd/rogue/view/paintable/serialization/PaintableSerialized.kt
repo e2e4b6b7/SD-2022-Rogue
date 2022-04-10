@@ -8,18 +8,27 @@ import java.awt.Color
 import java.nio.file.Files
 import java.nio.file.Path
 
-
+/**
+ * Base class for serialization of paintables.
+ */
 @Serializable
 sealed class PaintableSerialized {
     abstract fun create(): Paintable
 }
 
+
+/**
+ * Serializable version of MonoPaintable.
+ */
 @Serializable
 @SerialName("Mono")
 data class MonoColorPaintableSerialized(val r: Int, val g: Int, val b: Int) : PaintableSerialized() {
     override fun create() = MonoPaintable(Color(r, g, b))
 }
 
+/**
+ * Serializable version of ImagePaintable.
+ */
 @Serializable
 @SerialName("Image")
 data class ImagePaintableSerialized(val path: String, val policy: String) : PaintableSerialized() {
@@ -31,6 +40,9 @@ data class ImagePaintableSerialized(val path: String, val policy: String) : Pain
     }
 }
 
+/**
+ * Serializable version of SpritePaintable.
+ */
 @Serializable
 @SerialName("Sprite")
 data class SpritePaintableSerialized(val pathTemplate: String, val stepMillis: Long) : PaintableSerialized() {

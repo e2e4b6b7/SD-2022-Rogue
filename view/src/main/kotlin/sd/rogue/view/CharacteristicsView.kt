@@ -7,7 +7,9 @@ import sd.rogue.viewmodel.characteristics.CharacteristicsViewModel
 import java.awt.*
 import javax.swing.JComponent
 
-
+/**
+ * View displaying component with player's characteristics.
+ */
 class CharacteristicsView : JComponent(), KoinComponent {
     private val model: CharacteristicsViewModel = get()
     private val background = Assets.get("Characteristics Background")
@@ -17,6 +19,9 @@ class CharacteristicsView : JComponent(), KoinComponent {
         preferredSize = minimumSize
     }
 
+    /**
+     * Calculate size required for fitting all components.
+     */
     private fun calcMinimumSize(): Dimension {
         return Dimension(0, padding * 2 + (lineHeight + interLine) * model.characteristics.size - interLine)
     }

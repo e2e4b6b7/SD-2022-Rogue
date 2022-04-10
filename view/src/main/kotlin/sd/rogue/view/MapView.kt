@@ -10,6 +10,9 @@ import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 import javax.swing.JPanel
 
+/**
+ * View displaying component with current map.
+ */
 class MapView : JPanel(), KoinComponent {
     private val model: MapViewModel = get()
     private val background = Assets.get("Map Background")

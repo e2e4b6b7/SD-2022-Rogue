@@ -4,6 +4,11 @@ import sd.rogue.view.timers.Timer
 import java.awt.Graphics
 import java.awt.Image
 
+/**
+ * Cyclic sprite with fixed step. Image fitting policy is scale.
+ *
+ * @param stepMillis Time of single image in millis
+ */
 class SpritePaintable(private val images: List<Image>, stepMillis: Long) : Paintable {
     private var index = 0
     private val timer = Timer(stepMillis)
