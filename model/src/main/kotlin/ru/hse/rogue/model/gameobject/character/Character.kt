@@ -4,22 +4,36 @@ import ru.hse.rogue.model.gameobject.*
 import java.util.*
 
 
-class Character(private var maxHealth: UInt): Searchable {
-    var curHealth = maxHealth
-    private set
 
-    private val _arms = mutableListOf<Arm>()
-    val arms: List<Arm> = _arms
-    var curArm: Arm? = null
+class Character(val maxHealth: UInt) : Searchable {
+    var curHealth: UInt = maxHealth
     private set
+    get() = field + _usingInventory.sumOf { it.characteristics.getOrDefault(CharacteristicType.HEALTH, 0) }.toUInt()
 
-    private val _clothes = mutableListOf<Cloth>()
-    val clothes: List<Cloth> = _clothes
-    private val _curClothes = mutableListOf<Cloth>()
-    val curClothes: List<Cloth> = _curClothes
+    val armour: UInt get() = TODO("Add using armour in attacks")
+
+    private val _inventory = mutableListOf<Inventory>(ExtraHealth(this.maxHealth.toInt()))
+    val inventory: List<Inventory> get() = _inventory
+    private val _usingInventory = mutableListOf<Inventory>()
+
+    val usingInventory: List<Inventory> get() = _usingInventory
 
     private fun healthDecrease(harm: UInt) {
-        curHealth = maxOf(0u, curHealth - harm)
+        var mutableHarm = harm.toInt()
+        for (invent in _usingInventory) {
+            if (CharacteristicType.HEALTH in invent.characteristics) {
+                // now only ExtraHealth contains HEALTH
+                val harmForInvent = minOf(harm.toInt(), invent.characteristics[CharacteristicType.HEALTH]!!)
+                if (harmForInvent > 0) {
+                    invent.characteristics[CharacteristicType.HEALTH] =
+                        invent.characteristics[CharacteristicType.HEALTH]!! - harmForInvent
+                    mutableHarm -= harmForInvent
+                    if (mutableHarm == 0)
+                        return
+                }
+            }
+        }
+        curHealth = maxOf(0u, curHealth - mutableHarm.toUInt())
     }
 
     private fun healthIncrease(healthAddition: UInt) {
@@ -29,34 +43,22 @@ class Character(private var maxHealth: UInt): Searchable {
 
     fun isAlive() = curHealth > 0u
 
-    fun pick(item: Pickable): Boolean {
-        return when (item) {
-            is Arm -> {
-                _arms.add(item)
-                true
-            }
-            is Cloth -> {
-                _clothes.add(item)
-                true
-            }
-            is ExtraHealth -> healthIncrease(item.health)
-        }
+    fun pickInventory(item: Inventory) {
+        _inventory.add(item)
     }
 
-    fun wear(clothListIndex: Int) {
-        _curClothes.add(clothes[clothListIndex])
+    fun useInventory(item: Inventory) {
+        _usingInventory.add(item)
     }
 
-    fun takeOff(curClothListIndex: Int) {
-        _curClothes.removeAt(curClothListIndex)
-    }
-
-    fun useArm(armListIndex: Int) {
-        curArm = arms[armListIndex]
+    fun disableInventory(clothId: SearchId) {
+        _usingInventory.removeIf{ it.id == clothId }
     }
 
     fun attack(other: Character) {
-        other.healthDecrease(curArm?.harm ?: 0u)
+        other.healthDecrease(_usingInventory.sumOf {
+            it.characteristics.getOrDefault(CharacteristicType.HARM, 0)
+        }.toUInt())
     }
 
     override val id: SearchId = UUID.randomUUID()

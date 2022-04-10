@@ -1,9 +1,9 @@
 package ru.hse.rogue.model
 
 import ru.hse.rogue.model.gameobject.*
-import ru.hse.rogue.model.gameobject.character.Character
 import ru.hse.rogue.model.map.*
 import ru.hse.rogue.model.utils.isInBounds
+import ru.hse.rogue.model.gameobject.character.Character
 
 
 class ModelConnectionImpl internal constructor(private val gameMap: GameMap) : ModelConnection {
@@ -39,7 +39,7 @@ class ModelConnectionImpl internal constructor(private val gameMap: GameMap) : M
         when (val curObjectInNewPos = gameMap[newPos].last()) {
             is Character -> return false
             is Wall -> return false
-            is Pickable -> {
+            is Inventory -> {
                 character.pick(curObjectInNewPos)
                 gameMap.pop(newPos)
             }

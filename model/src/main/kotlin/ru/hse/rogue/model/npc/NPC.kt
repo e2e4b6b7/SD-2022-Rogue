@@ -18,7 +18,7 @@ class NPC(private val modelConnection: ModelConnection,
     private val isCharacterAddedToMap: Boolean
     init {
         if (arm != null)
-            character.pick(arm)
+            character.pickInventory(arm)
         isCharacterAddedToMap = modelConnection.addGameObject(character, startPosition)
     }
     fun run() {
