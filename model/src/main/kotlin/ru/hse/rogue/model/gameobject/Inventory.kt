@@ -1,8 +1,6 @@
 package ru.hse.rogue.model.gameobject
 
 import ru.hse.rogue.model.gameobject.character.CharacteristicType
-import ru.hse.rogue.model.level.AssetsId
-import ru.hse.rogue.model.map.MutableMapElement
 import java.util.UUID
 
 /** Interface for representing game object from inventory */
@@ -20,7 +18,7 @@ class Cloth(override val name: String, armour: Int = 0, override val presentatio
 }
 
 /** Class for representing items which give character extra health*/
-class ExtraHealth(extraHealth: Int, override val presentationId: PresentationId = AssetsId["Extra health"]) : Inventory {
+class ExtraHealth(extraHealth: Int, override val presentationId: PresentationId = "Extra health") : Inventory {
     override val name: String? = null
     override val characteristics = mutableMapOf(Pair(CharacteristicType.HEALTH, extraHealth))
     override val id: SearchId = UUID.randomUUID()
