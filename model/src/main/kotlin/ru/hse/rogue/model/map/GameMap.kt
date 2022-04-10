@@ -1,39 +1,39 @@
 package ru.hse.rogue.model.map
 
 import ru.hse.rogue.model.gameobject.*
-import java.util.Stack
 
-class MapElement : Stack<GameObject>()
-data class Position(val x: Int, val y: Int) {
-    fun isInBounds(width: Int, height: Int) = x in 0 until width && y in 0 until height
-}
+
+typealias MapElement = List<GameObject>
+typealias MutableMapElement = MutableList<GameObject>
+
+data class Position(val x: Int, val y: Int)
 
 class GameMap(val width: Int, val height: Int) {
     private val searchableObjectsMap = mutableMapOf<SearchId, Pair<Searchable, Position>>()
-    val mapElementsArray: Array<Array<MapElement>> = Array(height) {
+    val mapElementsArray: Array<Array<MutableMapElement>> = Array(height) {
         Array(width) {
-            MapElement().apply { push(FreeSpace) }
+            mutableListOf<GameObject>().apply { add(FreeSpace) }
         }
     }
 
-    operator fun get(x: Int, y: Int): GameObject = mapElementsArray[y][x].peek()
+    operator fun get(x: Int, y: Int): MapElement = mapElementsArray[y][x]
     operator fun get(position: Position) = this[position.x, position.y]
 
     operator fun set(x: Int, y: Int, gameObject: GameObject) {
         if (gameObject is Searchable) {
-            assert(gameObject.getId() !in searchableObjectsMap)
-            searchableObjectsMap[gameObject.getId()] = Pair(gameObject, Position(x, y))
+            assert(gameObject.id !in searchableObjectsMap)
+            searchableObjectsMap[gameObject.id] = Pair(gameObject, Position(x, y))
         }
-        mapElementsArray[y][x].push(gameObject)
+        mapElementsArray[y][x].add(gameObject)
     }
     operator fun set(position: Position, gameObject: GameObject) {
         this[position.x, position.y] = gameObject
     }
 
     fun pop(x: Int, y: Int): GameObject {
-        val gameObject = mapElementsArray[y][x].pop()
+        val gameObject = mapElementsArray[y][x].removeLast()
         if (gameObject is Searchable) {
-            searchableObjectsMap.remove(gameObject.getId())
+            searchableObjectsMap.remove(gameObject.id)
         }
         return gameObject
     }

@@ -4,7 +4,7 @@ import ru.hse.rogue.model.ModelConnection
 import ru.hse.rogue.model.gameobject.Arm
 import ru.hse.rogue.model.map.Position
 import ru.hse.rogue.model.npc.behaviour.Behaviour
-import ru.hse.rogue.model.gameobject.Character
+import ru.hse.rogue.model.gameobject.character.Character
 import ru.hse.rogue.model.utils.SleepingTimer
 
 class NPC(private val modelConnection: ModelConnection,
@@ -24,7 +24,7 @@ class NPC(private val modelConnection: ModelConnection,
     fun run() {
         if (isCharacterAddedToMap) {
             while (character.isAlive()) {
-                behaviour.doAnythingOrNotDo(modelConnection, character)
+                behaviour.doAnything(modelConnection, character)
                 sleepingTimer.await()
             }
         }

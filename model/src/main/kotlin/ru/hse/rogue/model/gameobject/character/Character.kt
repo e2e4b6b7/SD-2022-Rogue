@@ -1,10 +1,12 @@
-package ru.hse.rogue.model.gameobject
+package ru.hse.rogue.model.gameobject.character
 
+import ru.hse.rogue.model.gameobject.*
 import java.util.*
 
 
 class Character(private var maxHealth: UInt): Searchable {
-    private var curHealth = maxHealth
+    var curHealth = maxHealth
+    private set
 
     private val _arms = mutableListOf<Arm>()
     val arms: List<Arm> = _arms
@@ -16,19 +18,13 @@ class Character(private var maxHealth: UInt): Searchable {
     private val _curClothes = mutableListOf<Cloth>()
     val curClothes: List<Cloth> = _curClothes
 
-    private fun healthDecrease(harm: UInt): Boolean {
-        if (curHealth == 0u)
-            return false
+    private fun healthDecrease(harm: UInt) {
         curHealth = maxOf(0u, curHealth - harm)
-        return true
     }
 
-    private fun healthIncrease(healthAddition: UInt): Boolean {
-        assert(curHealth <= maxHealth)
-        if (curHealth == maxHealth)
-            return false
+    private fun healthIncrease(healthAddition: UInt) {
+        check(curHealth <= maxHealth)
         curHealth = minOf(maxHealth, curHealth + healthAddition)
-        return true
     }
 
     fun isAlive() = curHealth > 0u
@@ -63,6 +59,5 @@ class Character(private var maxHealth: UInt): Searchable {
         other.healthDecrease(curArm?.harm ?: 0u)
     }
 
-    private val id = UUID.randomUUID()
-    override fun getId(): SearchId = id
+    override val id: SearchId = UUID.randomUUID()
 }
