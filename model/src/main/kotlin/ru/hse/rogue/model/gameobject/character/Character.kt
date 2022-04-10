@@ -36,11 +36,6 @@ class Character(val maxHealth: UInt) : Searchable {
         curHealth = maxOf(0u, curHealth - mutableHarm.toUInt())
     }
 
-    private fun healthIncrease(healthAddition: UInt) {
-        check(curHealth <= maxHealth)
-        curHealth = minOf(maxHealth, curHealth + healthAddition)
-    }
-
     fun isAlive() = curHealth > 0u
 
     fun pickInventory(item: Inventory) {

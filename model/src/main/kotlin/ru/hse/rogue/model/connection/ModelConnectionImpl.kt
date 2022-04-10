@@ -1,4 +1,4 @@
-package ru.hse.rogue.model
+package ru.hse.rogue.model.connection
 
 import ru.hse.rogue.model.gameobject.*
 import ru.hse.rogue.model.map.*
@@ -6,23 +6,9 @@ import ru.hse.rogue.model.utils.isInBounds
 import ru.hse.rogue.model.gameobject.character.Character
 
 
-class ModelConnectionImpl internal constructor(private val gameMap: GameMap) : ModelConnection {
+class ModelConnectionImpl internal constructor(private val gameMap: GameMap) {
     @Synchronized
-    override fun getMap(): List<List<MapElement>> = gameMap.mapElementsArray.asList().map { it.asList() }
-
-    @Synchronized
-    override fun addGameObject(gameObject: GameObject, position: Position): Boolean {
-        if (position.isInBounds(gameMap.width, gameMap.height))
-            throw IndexOutOfBoundsException("Position coordinates out of map bounds")
-        if (gameMap[position].last() !is Character) {
-            gameMap[position] = gameObject
-            return true
-        }
-        return false
-    }
-
-    @Synchronized
-    override fun moveCharacter(characterId: SearchId, direction: Direction): Boolean {
+    fun moveCharacter(characterId: SearchId, direction: Direction): Boolean {
         val character = gameMap.searchObject(characterId)?.first ?: return false
         if (character !is Character)
             return false
