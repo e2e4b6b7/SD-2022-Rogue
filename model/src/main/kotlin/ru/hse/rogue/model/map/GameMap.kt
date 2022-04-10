@@ -6,19 +6,24 @@ import ru.hse.rogue.model.gameobject.*
 typealias MapElement = List<GameObject>
 typealias MutableMapElement = MutableList<GameObject>
 
+/** Position with coordinates ([x], [y])*/
 data class Position(val x: Int, val y: Int)
 
+/** Class for representing game map with ([width], [height]) shape */
 class GameMap(val width: Int, val height: Int) {
     private val searchableObjectsMap = mutableMapOf<SearchId, Pair<Searchable, Position>>()
+    /** Map. In every position there are a stack of [GameObject] */
     val mapElementsArray: Array<Array<MutableMapElement>> = Array(height) {
         Array(width) {
             mutableListOf<GameObject>().apply { add(FreeSpace) }
         }
     }
 
+    /** Get [MapElement] from ([x], [y]) */
     operator fun get(x: Int, y: Int): MapElement = mapElementsArray[y][x]
     operator fun get(position: Position) = this[position.x, position.y]
 
+    /** Add [gameObject] to position ([x], [y]). Append [gameObject] to the top of stack */
     operator fun set(x: Int, y: Int, gameObject: GameObject) {
         if (gameObject is Searchable) {
             assert(gameObject.id !in searchableObjectsMap)
@@ -30,6 +35,7 @@ class GameMap(val width: Int, val height: Int) {
         this[position.x, position.y] = gameObject
     }
 
+    /** Remove gameObject from top of the stack on position ([x], [y]) */
     fun pop(x: Int, y: Int): GameObject {
         val gameObject = mapElementsArray[y][x].removeLast()
         if (gameObject is Searchable) {
@@ -39,6 +45,7 @@ class GameMap(val width: Int, val height: Int) {
     }
     fun pop(position: Position) = this.pop(position.x, position.y)
 
+    /** Search for [Searchable] object from [id] */
     fun searchObject(id: SearchId): Pair<Searchable, Position>? {
         return searchableObjectsMap[id]
     }

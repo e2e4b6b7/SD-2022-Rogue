@@ -7,7 +7,9 @@ import ru.hse.rogue.model.map.MapElement
 import ru.hse.rogue.model.map.Position
 import ru.hse.rogue.model.utils.isInBounds
 
+/** Interface that is responsible for what actions character will do*/
 interface Behaviour {
+    /** Make an action based on modelConnection */
     fun doAnything(modelConnection: ModelCharacterConnection)
     fun List<List<MapElement>>.getPotentialCharactersForAttack(position: Position): List<SearchId> {
         if (this.isEmpty() || this[0].isEmpty())
