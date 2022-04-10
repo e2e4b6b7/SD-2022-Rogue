@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import ru.hse.rogue.model.gameobject.Wall
 import ru.hse.rogue.model.gameobject.character.Character
 
-class LevelGeneratorTest {
+internal class LevelGeneratorTest {
 
     private fun printMapToConsole(level: Level) {
         val map = level.map
@@ -13,8 +13,11 @@ class LevelGeneratorTest {
                 if (map[x, y].last() is Wall) {
                     print('#')
                 }
-                if (map[x, y].last() is Character) {
+                else if (map[x, y].last() is Character) {
                     print('*')
+                }
+                else {
+                    print(' ')
                 }
             }
             println()
@@ -22,15 +25,9 @@ class LevelGeneratorTest {
     }
 
     @Test
-    private fun testGen() {
-        val level = LevelGenerator.generateRandomLevel(1, 10, 10)
+    fun testGen() {
+        val level = LevelGenerator.generateRandomLevel(1, 15, 15)
         printMapToConsole(level)
     }
 
-}
-
-fun main() {
-    val level = LevelGenerator.generateRandomLevel(1, 10, 10)
-    val test = LevelGeneratorTest()
-    test.printMapToConsole(level)
 }
