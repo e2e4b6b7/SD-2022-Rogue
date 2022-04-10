@@ -1,11 +1,12 @@
 package ru.hse.rogue.model.gameobject.character
 
 import ru.hse.rogue.model.gameobject.*
+import ru.hse.rogue.model.level.AssetsId
 import java.util.*
 
 
 /** Class for character. May be player or NPC with maximal health [maxHealth]*/
-class Character(val maxHealth: UInt) : Searchable {
+class Character(val maxHealth: UInt, override val presentationId: PresentationId = AssetsId["Hero"]) : Searchable {
     /** Current health of the character*/
     var curHealth: UInt = maxHealth
     private set
