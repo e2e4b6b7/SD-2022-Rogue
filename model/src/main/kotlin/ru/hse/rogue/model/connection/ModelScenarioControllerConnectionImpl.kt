@@ -2,18 +2,15 @@ package ru.hse.rogue.model.connection
 
 import ru.hse.rogue.model.Game
 import ru.hse.rogue.model.gameobject.*
-import ru.hse.rogue.model.map.MapElement
-import ru.hse.rogue.model.map.Position
+import ru.hse.rogue.model.map.*
 
-class ModelScenarioControllerConnectionImpl internal constructor(private val game: Game) :
+class ModelScenarioControllerConnectionImpl internal constructor(private val gameMap: GameMap) :
     ModelScenarioControllerConnection {
-    override fun getSearchableWithPos(id: SearchId): Pair<Searchable, Position>? {
-        TODO("Not yet implemented")
-    }
+    override fun getSearchableWithPos(id: SearchId) = gameMap.searchObject(id)
 
     override fun addGameObject(gameObject: GameObject, position: Position): Boolean {
-        return game.addGameObject(gameObject, position)
+        TODO()
     }
 
-    override fun getMap(): List<List<MapElement>> = game.map
+    override fun getMap(): List<List<MapElement>> = gameMap.mapElements
 }

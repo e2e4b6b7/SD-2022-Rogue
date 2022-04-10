@@ -8,11 +8,10 @@ import ru.hse.rogue.model.map.Position
  * In every turn they check can they attack enemies and if not they move random */
 object AggressiveRandomWalker: Behaviour {
     override fun doAnything(modelConnection: ModelCharacterConnection) {
-        val charPos: Position = modelConnection.getSearchableWithPos(modelConnection.characterId)?.second ?: return
-        val potentialVictims = modelConnection.getMap().getPotentialCharactersForAttack(charPos)
-        if (potentialVictims.isNotEmpty())
-            modelConnection.attack(potentialVictims.random())
-        else
-            modelConnection.move(Direction.values().random())
+        for (dir in Direction.values()) {
+            if (modelConnection.move(dir))
+                return
+        }
+        modelConnection.move(Direction.values().random())
     }
 }

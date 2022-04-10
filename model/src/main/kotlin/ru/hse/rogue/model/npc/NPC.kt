@@ -10,9 +10,7 @@ class NPC(private val modelConnection: ModelCharacterConnection,
           sleepTimeInMs: Long = 30) {
     private val sleepingTimer = SleepingTimer(sleepTimeInMs)
     fun run() {
-        while (true) {
-            if (modelConnection.getSearchableWithPos(modelConnection.characterId) != null)
-                break
+        while (modelConnection.character.isAlive()) {
             behaviour.doAnything(modelConnection)
             sleepingTimer.await()
         }

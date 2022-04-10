@@ -1,6 +1,9 @@
 package ru.hse.rogue.model.map
 
 import ru.hse.rogue.model.gameobject.*
+import ru.hse.rogue.model.gameobject.character.Character
+import ru.hse.rogue.model.utils.applyDirection
+import ru.hse.rogue.model.utils.isInBounds
 
 
 typealias MapElement = List<GameObject>
@@ -13,14 +16,14 @@ data class Position(val x: Int, val y: Int)
 class GameMap(val width: Int, val height: Int) {
     private val searchableObjectsMap = mutableMapOf<SearchId, Pair<Searchable, Position>>()
     /** Map. In every position there are a stack of [GameObject] */
-    val mapElementsArray: Array<Array<MutableMapElement>> = Array(height) {
+    val mapElements: List<List<MutableMapElement>> = Array(height) {
         Array(width) {
             mutableListOf<GameObject>().apply { add(FreeSpace) }
-        }
-    }
+        }.asList()
+    }.asList()
 
     /** Get [MapElement] from ([x], [y]) */
-    operator fun get(x: Int, y: Int): MapElement = mapElementsArray[y][x]
+    operator fun get(x: Int, y: Int): MapElement = mapElements[y][x]
     operator fun get(position: Position) = this[position.x, position.y]
 
     /** Add [gameObject] to position ([x], [y]). Append [gameObject] to the top of stack */
@@ -29,7 +32,7 @@ class GameMap(val width: Int, val height: Int) {
             assert(gameObject.id !in searchableObjectsMap)
             searchableObjectsMap[gameObject.id] = Pair(gameObject, Position(x, y))
         }
-        mapElementsArray[y][x].add(gameObject)
+        mapElements[y][x].add(gameObject)
     }
     operator fun set(position: Position, gameObject: GameObject) {
         this[position.x, position.y] = gameObject
@@ -37,7 +40,7 @@ class GameMap(val width: Int, val height: Int) {
 
     /** Remove gameObject from top of the stack on position ([x], [y]) */
     fun pop(x: Int, y: Int): GameObject {
-        val gameObject = mapElementsArray[y][x].removeLast()
+        val gameObject = mapElements[y][x].removeLast()
         if (gameObject is Searchable) {
             searchableObjectsMap.remove(gameObject.id)
         }
@@ -48,6 +51,57 @@ class GameMap(val width: Int, val height: Int) {
     /** Search for [Searchable] object from [id] */
     fun searchObject(id: SearchId): Pair<Searchable, Position>? {
         return searchableObjectsMap[id]
+    }
+
+    @Synchronized
+    fun attack(characterId: SearchId, direction: Direction): Boolean {
+        val (character, pos) = searchObject(characterId) ?: return false
+        if (character !is Character)
+            throw RuntimeException("Searchable object with given id isn't Character")
+        val dirPos = pos.applyDirection(direction)
+        if (!dirPos.isInBounds(width, height))
+            return false
+        val dirObject = this[dirPos].last()
+        if (dirObject is Character) {
+            character.attack(dirObject)
+            if (!dirObject.isAlive())
+                this.pop(dirPos)
+            return true
+        }
+        return false
+    }
+
+    @Synchronized
+    fun useInventory(characterId: SearchId, inventoryId: SearchId): Boolean {
+        val character = searchObject(characterId)?.first ?: return false
+        if (character !is Character)
+            return false
+        val inventory = searchObject(inventoryId)?.first ?: return false
+        if (inventory !is Inventory)
+            return false
+        character.useInventory(inventory)
+        return true
+    }
+
+    @Synchronized
+    fun move(characterId: SearchId, direction: Direction): Boolean {
+        val (character, pos) = searchObject(characterId) ?: return false
+        if (character !is Character)
+            throw RuntimeException("Searchable object with given id isn't Character")
+
+        val dirPos = pos.applyDirection(direction)
+        if (!dirPos.isInBounds(width, height))
+            return false
+        val dirObject = this[dirPos].last()
+        if (!dirPos.isInBounds(width, height) || dirObject is Character || dirObject is Wall)
+            return false
+
+        if (dirObject is Inventory) {
+            character.pickInventory(dirObject)
+            this.pop(dirPos)
+        }
+        this[dirPos] = this.pop(dirPos)
+        return true
     }
 }
 
