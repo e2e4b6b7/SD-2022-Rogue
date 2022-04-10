@@ -10,5 +10,5 @@ object Wall: GameObject
 typealias SearchId = UUID
 
 interface Searchable: GameObject {
-    fun getId(): SearchId
+    val id: SearchId
 }

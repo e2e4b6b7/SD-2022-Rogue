@@ -2,17 +2,19 @@ package ru.hse.rogue.model
 
 import ru.hse.rogue.model.gameobject.*
 import ru.hse.rogue.model.map.*
+import ru.hse.rogue.model.utils.isInBounds
+import ru.hse.rogue.model.gameobject.character.Character
 
 
 class ModelConnectionImpl internal constructor(private val gameMap: GameMap) : ModelConnection {
     @Synchronized
-    override fun getMap(): Array<Array<MapElement>> = gameMap.mapElementsArray
+    override fun getMap(): List<List<MapElement>> = gameMap.mapElementsArray.asList().map { it.asList() }
 
     @Synchronized
     override fun addGameObject(gameObject: GameObject, position: Position): Boolean {
         if (position.isInBounds(gameMap.width, gameMap.height))
             throw IndexOutOfBoundsException("Position coordinates out of map bounds")
-        if (gameMap[position] !is Character) {
+        if (gameMap[position].last() !is Character) {
             gameMap[position] = gameObject
             return true
         }
@@ -20,11 +22,11 @@ class ModelConnectionImpl internal constructor(private val gameMap: GameMap) : M
     }
 
     @Synchronized
-    override fun tryMoveCharacter(characterId: SearchId, direction: Direction): Boolean {
+    override fun moveCharacter(characterId: SearchId, direction: Direction): Boolean {
         val character = gameMap.searchObject(characterId)?.first ?: return false
         if (character !is Character)
             return false
-        val curPos = getSearchablePos(characterId) ?: return false
+        val curPos = getSearchableWithPos(characterId)?.second ?: return false
         val newPos = when (direction) {
                 Direction.LEFT -> Position(curPos.x - 1, curPos.y)
                 Direction.RIGHT -> Position(curPos.x + 1, curPos.y)
@@ -34,10 +36,10 @@ class ModelConnectionImpl internal constructor(private val gameMap: GameMap) : M
         if (!newPos.isInBounds(gameMap.width, gameMap.height))
             return false
 
-        when (val curObjectInNewPos = gameMap[newPos]) {
+        when (val curObjectInNewPos = gameMap[newPos].last()) {
             is Character -> return false
             is Wall -> return false
-            is Pickable -> {
+            is Inventory -> {
                 character.pick(curObjectInNewPos)
                 gameMap.pop(newPos)
             }
@@ -59,10 +61,10 @@ class ModelConnectionImpl internal constructor(private val gameMap: GameMap) : M
     }
 
     @Synchronized
-    override fun getSearchablePos(id: SearchId): Position? = gameMap.searchObject(id)?.second
+    override fun getSearchableWithPos(id: SearchId): Pair<Searchable, Position>? = gameMap.searchObject(id)
 
     @Synchronized
-    override fun tryAttack(attackingCharacterId: SearchId, victimCharacterId: SearchId): Boolean {
+    override fun attack(attackingCharacterId: SearchId, victimCharacterId: SearchId): Boolean {
         val attackingCharacter = gameMap.searchObject(attackingCharacterId)?.first ?: return false
         val victimCharacter = gameMap.searchObject(victimCharacterId)?.first ?: return false
         if (attackingCharacter !is Character || victimCharacter !is Character) {
@@ -81,24 +83,5 @@ class ModelConnectionImpl internal constructor(private val gameMap: GameMap) : M
         }
         character.wear(clothOfCharacterIndex)
         return true
-    }
-
-    @Synchronized
-    override fun getPotentialCharactersForAttack(position: Position): List<SearchId> {
-        val map = gameMap.mapElementsArray
-        if (map.isEmpty() || map[0].isEmpty())
-            throw RuntimeException("Game map is empty")
-        val res = mutableListOf<SearchId>()
-        for ((x, y) in listOf(Pair(position.x - 1, 0), Pair(position.x + 1, 0),
-            Pair(0, position.y + 1), Pair(0, position.y - 1)
-        )) {
-            if (!Position(x, y).isInBounds(map[0].size, map.size)) {
-                val gameObject = map[y][x].peek()
-                if (gameObject is Character) {
-                    res.add(gameObject.getId())
-                }
-            }
-        }
-        return res
     }
 }
