@@ -8,7 +8,7 @@ data class Position(val x: Int, val y: Int) {
     fun isInBounds(width: Int, height: Int) = x in 0 until width && y in 0 until height
 }
 
-internal class GameMap(val width: Int, val height: Int) {
+class GameMap(val width: Int, val height: Int) {
     private val searchableObjectsMap = mutableMapOf<SearchId, Pair<Searchable, Position>>()
     val mapElementsArray: Array<Array<MapElement>> = Array(height) {
         Array(width) {
