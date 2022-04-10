@@ -99,7 +99,7 @@ object LevelGenerator {
                 heightRight - heightLeft,
                 splitVertically, recursionDepth)
         ) {
-            (0..enemiesToSpawn).forEach { _ ->
+            (0 until enemiesToSpawn).forEach { _ ->
                 spawnEnemies(widthLeft, widthRight, heightLeft, heightRight, level)
             }
             return
