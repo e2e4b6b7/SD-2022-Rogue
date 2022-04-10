@@ -2,12 +2,12 @@ package ru.hse.rogue.model.map
 
 import ru.hse.rogue.model.gameobject.FreeSpace
 import ru.hse.rogue.model.gameobject.Wall
+import ru.hse.rogue.model.gameobject.Character
 import ru.hse.rogue.model.npc.NPC
 
 object LevelGenerator {
 
     private const val MIN_ROOM_SIZE = 5
-    private const val RANDOM_FOR_SPLIT = 3
     private const val MAX_N_TRIES_TO_SPAWN_RANDOM = 3
 
     fun generateRandomLevel(enemies: Int, width: Int, height: Int): GameMap {
@@ -16,21 +16,15 @@ object LevelGenerator {
         return map
     }
 
-    private fun generateRandomEnemies(): NPC {
-        TODO("Not implemented")
-    }
-
     private fun spawnEnemies(widthLeft: Int, widthRight: Int,
                              heightLeft: Int, heightRight: Int, map: GameMap) {
         for (i in (0..MAX_N_TRIES_TO_SPAWN_RANDOM)) {
             val x = (widthLeft + 1 until  widthRight).random()
             val y = (heightLeft + 1 until  heightRight).random()
-            // TODO add generating enemies
-            if (map[x, y] == FreeSpace) {
-                // map[x, y] = generateRandomEnemies()
+            if (map[x, y] is FreeSpace) {
+                map[x, y] = Character( 100u)
             }
         }
-
     }
 
     private fun buildWalls(map: GameMap, enemiesToSpawn: Int) {
@@ -49,18 +43,18 @@ object LevelGenerator {
         }
     }
 
-    private fun needToSplit(width: Int, height: Int, splitVertically: Boolean): Boolean {
+    private fun needToSplit(width: Int, height: Int, splitVertically: Boolean, level: Int): Boolean {
         if (width < 2 * MIN_ROOM_SIZE + 2 && splitVertically ||
             height < 2 * MIN_ROOM_SIZE + 2 && !splitVertically) {
             return false
         }
-        return (0 until RANDOM_FOR_SPLIT).random() % RANDOM_FOR_SPLIT != 0
+        return (0 until level).random() % level != 0
     }
 
     private fun buildInnerWalls(widthLeft: Int, widthRight: Int,
                    heightLeft: Int, heightRight: Int,
-                   splitVertically: Boolean, map: GameMap, enemiesToSpawn: Int) {
-        if (!needToSplit(widthRight - widthLeft, heightRight - heightLeft, splitVertically)) {
+                   splitVertically: Boolean, map: GameMap, enemiesToSpawn: Int, level: Int = 1) {
+        if (!needToSplit(widthRight - widthLeft, heightRight - heightLeft, splitVertically, level)) {
             (0..enemiesToSpawn).forEach { _ ->
                 spawnEnemies(widthLeft, widthRight, heightLeft, heightRight, map)
             }
@@ -77,12 +71,14 @@ object LevelGenerator {
             buildInnerWalls(
                 widthLeft, widthSplit,
                 heightLeft, heightRight,
-                false, map, enemiesToSpawnInFirst
+                false, map, enemiesToSpawnInFirst,
+                level + 1
             )
             buildInnerWalls(
                 widthSplit, widthRight,
                 heightLeft, heightRight,
-                false, map, enemiesToSpawnInSecond
+                false, map, enemiesToSpawnInSecond,
+                level + 1
             )
         }
         else {
@@ -93,12 +89,14 @@ object LevelGenerator {
             buildInnerWalls(
                 widthLeft, widthRight,
                 heightLeft, heightSplit,
-                true, map, enemiesToSpawnInFirst
+                true, map, enemiesToSpawnInFirst,
+                level + 1
             )
             buildInnerWalls(
                 widthLeft, widthRight,
                 heightSplit, heightRight,
-                true, map, enemiesToSpawnInSecond
+                true, map, enemiesToSpawnInSecond,
+                level + 1
             )
         }
     }
