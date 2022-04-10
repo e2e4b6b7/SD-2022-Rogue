@@ -38,7 +38,7 @@ object LevelGenerator {
             for (y in (1 until level.map.height)) {
                 if (level.map[x, y].last() is FreeSpace) {
                     level.map[x, y] = level.player
-                    break
+                    return
                 }
             }
         }
@@ -70,11 +70,11 @@ object LevelGenerator {
         buildInnerWalls(0, width - 1,
             0, height - 1,
             true, level, enemiesToSpawn)
-        (0..width).forEach {x ->
+        (0 until width).forEach {x ->
             map[x, 0] = Wall
             map[x, height - 1] = Wall
         }
-        (0..height).forEach {y ->
+        (0 until height).forEach {y ->
             map[0, y] = Wall
             map[width - 1, y] = Wall
         }
@@ -85,7 +85,9 @@ object LevelGenerator {
             height < 2 * MIN_ROOM_SIZE + 2 && !splitVertically) {
             return false
         }
-        return (0 until level).random() % level != 0
+        return if (level > 5)
+            (0 until level).random() % level == 0
+        else true
     }
 
     private fun buildInnerWalls(widthLeft: Int, widthRight: Int,
