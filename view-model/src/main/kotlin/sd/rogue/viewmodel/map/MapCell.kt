@@ -7,9 +7,7 @@ class MapCell : Iterable<MapElement> {
     private val elements = mutableListOf<MapElement>()
 
     fun add(element: MapElement) {
-        val idx = elements.indexOfFirst { it.priority > element.priority }
-        val pos = if (idx == -1) elements.size else idx
-        elements.add(pos, element)
+        elements.add(element)
     }
 
     fun remove(element: MapElement) {

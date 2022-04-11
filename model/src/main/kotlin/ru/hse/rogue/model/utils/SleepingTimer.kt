@@ -1,7 +1,7 @@
 package ru.hse.rogue.model.utils
 
-class SleepingTimer(private val step: Long) {
-    private var next: Long = System.currentTimeMillis() + step
+class SleepingTimer(private val stepMillis: Long) {
+    private var next: Long = System.currentTimeMillis() + stepMillis
 
     fun await() {
         var cur = System.currentTimeMillis()
@@ -9,11 +9,11 @@ class SleepingTimer(private val step: Long) {
             Thread.sleep(next - cur)
             cur = System.currentTimeMillis()
         }
-        if (cur >= 2 * step + next) {
+        if (cur >= 2 * stepMillis + next) {
             // To prevent speedup after unexpected freeze
-            next = cur + step
+            next = cur + stepMillis
         } else {
-            next += step
+            next += stepMillis
         }
     }
 }

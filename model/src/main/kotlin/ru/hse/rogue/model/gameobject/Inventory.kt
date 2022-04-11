@@ -1,12 +1,13 @@
 package ru.hse.rogue.model.gameobject
 
 import ru.hse.rogue.model.gameobject.character.CharacteristicType
-import java.util.UUID
+import java.util.*
 
 /** Interface for representing game object from inventory */
-interface Inventory: Searchable {
+interface Inventory : Searchable {
     /** Name of item */
     val name: String?
+
     /** Characteristics of item */
     val characteristics: MutableMap<CharacteristicType, Int>
 }

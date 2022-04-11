@@ -10,5 +10,5 @@ enum class CharacteristicType {
 /** Class for representing characteristic with type [characteristic] and value [startValue]*/
 data class Characteristic(val characteristic: CharacteristicType, private val startValue: Int) {
     var value: Int = startValue
-    internal set
+        internal set
 }

@@ -1,28 +1,39 @@
 package sd.rogue.viewmodel.map
 
-class MapViewModel {
-    private val fieldMutable = Field(25, 16)
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import ru.hse.rogue.model.connection.ModelCharacterConnection
+import ru.hse.rogue.model.map.Direction
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
+
+class MapViewModel : KoinComponent {
+    private val connection: ModelCharacterConnection = get()
+
+    private var fieldMutable = fetchField()
     val field: ImmutableField get() = fieldMutable
 
-    private var x = 0
-    private var y = 0
-
-    private val hero = MapElement(2, "Main Hero").also {
-        fieldMutable.add(0, 0, it)
+    init {
+        get<ScheduledExecutorService>().scheduleAtFixedRate(this::updateField, 15, 15, TimeUnit.MILLISECONDS)
     }
 
-    init {
-        repeat(25) { w ->
-            repeat(16) { h ->
-                fieldMutable.add(w, h, MapElement(0, "Grass"))
+    fun move(direction: Direction) {
+        connection.move(direction)
+    }
+
+    private fun updateField() {
+        fieldMutable = fetchField()
+    }
+
+    private fun fetchField(): Field {
+        val newField = Field(connection.map.size, connection.map[0].size)
+        connection.map.forEachIndexed { w, col ->
+            col.forEachIndexed { h, cell ->
+                cell.forEach { el ->
+                    newField.add(w, h, MapElement(el.presentationId))
+                }
             }
         }
-    }
-
-    fun move(dx: Int, dy: Int) {
-        fieldMutable.remove(x, y, hero)
-        x += dx
-        y += dy
-        fieldMutable.add(x, y, hero)
+        return newField
     }
 }

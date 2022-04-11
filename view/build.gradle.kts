@@ -6,6 +6,8 @@ plugins {
 
 dependencies {
     implementation(project(":view-model"))
+    implementation(project(":model"))
+
     implementation("org.jetbrains.kotlinx", "kotlinx-serialization-json", "1.3.2")
     implementation("io.insert-koin", "koin-core", "3.1.6")
 

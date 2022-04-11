@@ -2,6 +2,7 @@ package sd.rogue.view
 
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import ru.hse.rogue.model.map.Direction
 import sd.rogue.view.assets.Assets
 import sd.rogue.viewmodel.map.MapViewModel
 import sd.rogue.viewmodel.map.forEach
@@ -24,11 +25,10 @@ class MapView : JPanel(), KoinComponent {
 
             override fun keyPressed(e: KeyEvent) {
                 when (e.keyCode) {
-                    KeyEvent.VK_LEFT -> model.move(-1, 0)
-                    KeyEvent.VK_RIGHT -> model.move(1, 0)
-                    KeyEvent.VK_UP -> model.move(0, -1)
-                    KeyEvent.VK_DOWN -> model.move(0, 1)
-                    else -> println(e.keyCode)
+                    KeyEvent.VK_LEFT -> model.move(Direction.LEFT)
+                    KeyEvent.VK_RIGHT -> model.move(Direction.RIGHT)
+                    KeyEvent.VK_UP -> model.move(Direction.UP)
+                    KeyEvent.VK_DOWN -> model.move(Direction.DOWN)
                 }
             }
 

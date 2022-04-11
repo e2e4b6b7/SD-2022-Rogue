@@ -3,10 +3,12 @@ package sd.rogue.view
 import org.koin.core.context.startKoin
 import sd.rogue.view.assets.Assets
 import sd.rogue.view.timers.SleepingTimer
-import sd.rogue.viewmodel.viewModelModule
+import sd.rogue.viewmodel.GameConfig
+import sd.rogue.viewmodel.init
 import java.awt.GraphicsEnvironment
 import java.nio.file.Path
 import javax.swing.JFrame
+
 
 typealias Stack<T> = ArrayList<T>
 typealias LayoutFactory = () -> Layout
@@ -21,8 +23,10 @@ fun repaintCycle(frame: JFrame) {
 }
 
 fun main() {
+    val config = GameConfig(5, 63, 40)
+
     startKoin {
-        modules(viewModelModule)
+        modules(init(config))
     }
 
     Assets.load(Path.of("assets.json"))

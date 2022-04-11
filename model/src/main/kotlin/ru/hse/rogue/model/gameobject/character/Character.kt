@@ -8,14 +8,15 @@ import java.util.*
 class Character(val maxHealth: UInt, override val presentationId: PresentationId = "Hero") : Searchable {
     /** Current health of the character*/
     var curHealth: UInt = maxHealth
-    private set
-    get() = field + _usingInventory.sumOf { it.characteristics.getOrDefault(CharacteristicType.HEALTH, 0) }.toUInt()
+        private set
+        get() = field + _usingInventory.sumOf { it.characteristics.getOrDefault(CharacteristicType.HEALTH, 0) }.toUInt()
 
     val armour: UInt get() = TODO("Add using armour in attacks")
 
     private val _inventory = mutableListOf<Inventory>(ExtraHealth(this.maxHealth.toInt()))
     val inventory: List<Inventory> get() = _inventory
     private val _usingInventory = mutableListOf<Inventory>()
+
     /** Which inventory items is currently using by a character*/
     val usingInventory: List<Inventory> get() = _usingInventory
 
@@ -36,6 +37,7 @@ class Character(val maxHealth: UInt, override val presentationId: PresentationId
         }
         curHealth = maxOf(0u, curHealth - mutableHarm.toUInt())
     }
+
     /** Return true uf character is alive, false otherwise */
     fun isAlive() = curHealth > 0u
 
@@ -50,7 +52,7 @@ class Character(val maxHealth: UInt, override val presentationId: PresentationId
     }
 
     fun disableInventory(clothId: SearchId) {
-        _usingInventory.removeIf{ it.id == clothId }
+        _usingInventory.removeIf { it.id == clothId }
     }
 
     /** Attack other character. It decreases health by value of this character harm */

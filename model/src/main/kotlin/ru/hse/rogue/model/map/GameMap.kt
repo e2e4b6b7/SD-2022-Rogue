@@ -15,15 +15,16 @@ data class Position(val x: Int, val y: Int)
 /** Class for representing game map with ([width], [height]) shape */
 class GameMap(val width: Int, val height: Int) {
     private val searchableObjectsMap = mutableMapOf<SearchId, Pair<Searchable, Position>>()
+
     /** Map. In every position there are a stack of [GameObject] */
-    val mapElements: List<List<MutableMapElement>> = Array(height) {
-        Array(width) {
+    val mapElements: List<List<MutableMapElement>> = Array(width) {
+        Array(height) {
             mutableListOf<GameObject>().apply { add(FreeSpace) }
         }.asList()
     }.asList()
 
     /** Get [MapElement] from ([x], [y]) */
-    operator fun get(x: Int, y: Int): MapElement = mapElements[y][x]
+    operator fun get(x: Int, y: Int): MapElement = mapElements[x][y]
     operator fun get(position: Position) = this[position.x, position.y]
 
     /** Add [gameObject] to position ([x], [y]). Append [gameObject] to the top of stack */
@@ -32,20 +33,22 @@ class GameMap(val width: Int, val height: Int) {
             assert(gameObject.id !in searchableObjectsMap)
             searchableObjectsMap[gameObject.id] = Pair(gameObject, Position(x, y))
         }
-        mapElements[y][x].add(gameObject)
+        mapElements[x][y].add(gameObject)
     }
+
     operator fun set(position: Position, gameObject: GameObject) {
         this[position.x, position.y] = gameObject
     }
 
     /** Remove gameObject from top of the stack on position ([x], [y]) */
     fun pop(x: Int, y: Int): GameObject {
-        val gameObject = mapElements[y][x].removeLast()
+        val gameObject = mapElements[x][y].removeLast()
         if (gameObject is Searchable) {
             searchableObjectsMap.remove(gameObject.id)
         }
         return gameObject
     }
+
     fun pop(position: Position) = this.pop(position.x, position.y)
 
     /** Search for [Searchable] object from [id] */
@@ -100,7 +103,7 @@ class GameMap(val width: Int, val height: Int) {
             character.pickInventory(dirObject)
             this.pop(dirPos)
         }
-        this[dirPos] = this.pop(dirPos)
+        this[dirPos] = this.pop(pos)
         return true
     }
 }

@@ -4,17 +4,17 @@
 		"path": "images/Health Icon.png",
 		"policy": "Scale"
 	},
-	"Mana Icon": {
+	"Wall": {
 		"type": "Image",
-		"path": "images/Mana Icon.png",
-		"policy": "Scale"
+		"path": "images/Wall.jpg",
+		"policy": "ScaleFull"
 	},
 	"Grass": {
 		"type": "Image",
 		"path": "images/Grass.jpg",
 		"policy": "ScaleFull"
 	},
-	"Main Hero": {
+	"Hero": {
 		"type": "Sprite",
 		"pathTemplate": "images/png/Dead ($).png",
 		"stepMillis": 50
