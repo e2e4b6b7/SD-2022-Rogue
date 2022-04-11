@@ -1,0 +1,35 @@
+package ru.hse.rogue.model.gameobject
+
+import ru.hse.rogue.model.gameobject.character.CharacteristicType
+import java.util.*
+
+/** Interface for representing game object from inventory */
+interface Inventory : Searchable {
+    /** Name of item */
+    val name: String?
+
+    /** Characteristics of item */
+    val characteristics: MutableMap<CharacteristicType, Int>
+}
+
+/** Class for representing cloth item with armour */
+class Cloth(override val name: String, armour: Int = 0, override val presentationId: PresentationId) : Inventory {
+    override val characteristics = mutableMapOf(Pair(CharacteristicType.ARMOUR, armour))
+    override val id: SearchId = UUID.randomUUID()
+}
+
+/** Class for representing items which give character extra health*/
+class ExtraHealth(extraHealth: Int, override val presentationId: PresentationId = "Extra health") : Inventory {
+    override val name: String? = null
+    override val characteristics = mutableMapOf(Pair(CharacteristicType.HEALTH, extraHealth))
+    override val id: SearchId = UUID.randomUUID()
+}
+
+/** Class for representing items which give character new value of harm */
+class Arm(override val name: String, harm: Int, override val presentationId: PresentationId) : Inventory {
+    override val characteristics = mutableMapOf(Pair(CharacteristicType.HARM, harm))
+    override val id: SearchId = UUID.randomUUID()
+}
+
+
+

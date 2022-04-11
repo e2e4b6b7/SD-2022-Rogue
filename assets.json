@@ -1,0 +1,38 @@
+{
+	"Health Icon": {
+		"type": "Image",
+		"path": "images/Health Icon.png",
+		"policy": "Scale"
+	},
+	"Wall": {
+		"type": "Image",
+		"path": "images/Wall.jpg",
+		"policy": "ScaleFull"
+	},
+	"Grass": {
+		"type": "Image",
+		"path": "images/Grass.jpg",
+		"policy": "ScaleFull"
+	},
+	"Hero": {
+		"type": "Sprite",
+		"pathTemplate": "images/png/Dead ($).png",
+		"stepMillis": 50
+	},
+	"Characteristics Background": {
+		"type": "Image",
+		"path": "images/Characteristics Background.jpg",
+		"policy": "ScaleFull"
+	},
+	"Map Background": {
+		"type": "Mono",
+		"r": 0,
+		"g": 0,
+		"b": 0
+	},
+	"Inventory Background": {
+		"type": "Image",
+		"path": "images/Inventory Background.jpg",
+		"policy": "Crop"
+	}
+}
