@@ -1,7 +1,7 @@
 package ru.hse.rogue.model.map
 
 import ru.hse.rogue.model.gameobject.*
-import ru.hse.rogue.model.gameobject.character.Character
+import ru.hse.rogue.model.gameobject.character.CharacterImpl
 import ru.hse.rogue.model.utils.*
 
 
@@ -56,13 +56,13 @@ class GameMap(val width: Int, val height: Int) {
     @Synchronized
     fun attack(characterId: SearchId, direction: Direction): Boolean {
         val (character, pos) = searchObject(characterId) ?: return false
-        if (character !is Character)
+        if (character !is CharacterImpl)
             throw RuntimeException("Searchable object with given id isn't Character")
         val dirPos = pos.applyDirection(direction)
         if (!dirPos.isInBounds(width, height))
             return false
         val dirObject = this[dirPos].last()
-        if (dirObject is Character) {
+        if (dirObject is CharacterImpl) {
             character.attack(dirObject)
             if (!dirObject.isAlive())
                 this.pop(dirPos)
@@ -74,14 +74,14 @@ class GameMap(val width: Int, val height: Int) {
     @Synchronized
     fun move(characterId: SearchId, direction: Direction): Boolean {
         val (character, pos) = searchObject(characterId) ?: return false
-        if (character !is Character)
+        if (character !is CharacterImpl)
             throw RuntimeException("Searchable object with given id isn't Character")
 
         val dirPos = pos.applyDirection(direction)
         if (!dirPos.isInBounds(width, height))
             return false
         val dirObject = this[dirPos].last()
-        if (!dirPos.isInBounds(width, height) || dirObject is Character || dirObject is Wall)
+        if (!dirPos.isInBounds(width, height) || dirObject is CharacterImpl || dirObject is Wall)
             return false
 
         if (dirObject is Inventory) {

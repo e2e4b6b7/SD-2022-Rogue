@@ -2,9 +2,8 @@ package ru.hse.rogue.model.level
 
 import org.junit.jupiter.api.Test
 import ru.hse.rogue.model.gameobject.*
-import ru.hse.rogue.model.gameobject.character.Character
+import ru.hse.rogue.model.gameobject.character.CharacterImpl
 import ru.hse.rogue.model.map.Position
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.assertEquals
 
 internal class LevelGeneratorTest {
@@ -18,7 +17,7 @@ internal class LevelGeneratorTest {
             return 0
         }
         visited[pos.y][pos.x] = true
-        var visitedEnemies = if (level.map[pos].last() is Character) 1 else 0
+        var visitedEnemies = if (level.map[pos].last() is CharacterImpl) 1 else 0
         for (dt in dts) {
             visitedEnemies += dfs(Position(pos.x + dt.first, pos.y + dt.second), visited, level)
         }
@@ -32,7 +31,7 @@ internal class LevelGeneratorTest {
                 if (map[x, y].last() is Wall) {
                     print('#')
                 }
-                else if (map[x, y].last() is Character) {
+                else if (map[x, y].last() is CharacterImpl) {
                     print('*')
                 }
                 else {

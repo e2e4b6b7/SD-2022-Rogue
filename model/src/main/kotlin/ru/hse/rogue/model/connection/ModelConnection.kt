@@ -1,7 +1,7 @@
 package ru.hse.rogue.model.connection
 
 import ru.hse.rogue.model.gameobject.*
-import ru.hse.rogue.model.gameobject.character.Character
+import ru.hse.rogue.model.gameobject.character.ImmutableCharacter
 import ru.hse.rogue.model.map.*
 import ru.hse.rogue.model.utils.Immutable2DArray
 
@@ -10,8 +10,7 @@ interface ModelViewConnection {
 }
 
 interface ModelCharacterConnection : ModelViewConnection {
-    // TODO make immutable
-    val character: Character
+    val character: ImmutableCharacter
     fun move(direction: Direction): Boolean
     fun useInventory(inventoryId: SearchId): Boolean
     fun disableInventory(inventorId: SearchId): Boolean

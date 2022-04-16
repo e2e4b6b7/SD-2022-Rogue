@@ -4,6 +4,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import ru.hse.rogue.model.connection.ModelCharacterConnection
 import ru.hse.rogue.model.map.Direction
+import ru.hse.rogue.model.utils.forEachIndexed
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
@@ -26,12 +27,10 @@ class MapViewModel : KoinComponent {
     }
 
     private fun fetchField(): Field {
-        val newField = Field(connection.map.size, connection.map[0].size)
-        connection.map.forEachIndexed { w, col ->
-            col.forEachIndexed { h, cell ->
-                cell.forEach { el ->
-                    newField.add(w, h, MapElement(el.presentationId))
-                }
+        val newField = Field(connection.map.outerSize, connection.map.innerSize)
+        connection.map.forEachIndexed { w, h, cell ->
+            cell.forEach { el ->
+                newField.add(w, h, MapElement(el.presentationId))
             }
         }
         return newField

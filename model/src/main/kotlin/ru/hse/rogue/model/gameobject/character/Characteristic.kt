@@ -3,8 +3,7 @@ package ru.hse.rogue.model.gameobject.character
 /** Type of characteristics */
 enum class CharacteristicType {
     HEALTH,
-    HARM,
-    ARMOUR
+    HARM
 }
 
 /** Class for representing characteristic with type [characteristic] and value [startValue]*/

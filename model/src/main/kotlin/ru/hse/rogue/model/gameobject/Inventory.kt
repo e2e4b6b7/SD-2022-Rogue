@@ -13,8 +13,8 @@ interface Inventory : Searchable {
 }
 
 /** Class for representing cloth item with armour */
-class Cloth(override val name: String, armour: Int = 0, override val presentationId: PresentationId) : Inventory {
-    override val characteristics = mutableMapOf(Pair(CharacteristicType.ARMOUR, armour))
+class Cloth(override val name: String, health: Int = 0, override val presentationId: PresentationId) : Inventory {
+    override val characteristics = mutableMapOf(Pair(CharacteristicType.HEALTH, health))
     override val id: SearchId = UUID.randomUUID()
 }
 

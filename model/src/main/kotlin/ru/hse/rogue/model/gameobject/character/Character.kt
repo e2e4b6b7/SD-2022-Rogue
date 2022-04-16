@@ -1,68 +1,38 @@
 package ru.hse.rogue.model.gameobject.character
 
 import ru.hse.rogue.model.gameobject.*
-import java.util.*
 
-
-/** Class for character. May be player or NPC with maximal health [maxHealth]*/
-class Character(val maxHealth: UInt, override val presentationId: PresentationId = "Hero") : Searchable {
+/** Interface for watching character game object */
+interface ImmutableCharacter : Searchable {
     /** Current health of the character*/
-    var curHealth: UInt = maxHealth
-        private set
-        get() = field + _usingInventory.sumOf { it.characteristics.getOrDefault(CharacteristicType.HEALTH, 0) }.toUInt()
+    val curHealth: UInt
 
-    val armour: UInt get() = TODO("Add using armour in attacks")
-
-    private val _inventory = mutableListOf<Inventory>(ExtraHealth(this.maxHealth.toInt()))
-    val inventory: List<Inventory> get() = _inventory
-    private val _usingInventory = mutableListOf<Inventory>()
+    /** Which inventory items has been picked by character*/
+    val inventory: List<Inventory>
 
     /** Which inventory items is currently using by a character*/
-    val usingInventory: List<Inventory> get() = _usingInventory
+    val usingInventory: List<Inventory>
 
-    private fun healthDecrease(harm: UInt) {
-        var mutableHarm = harm.toInt()
-        for (invent in _usingInventory) {
-            if (CharacteristicType.HEALTH in invent.characteristics) {
-                // now only ExtraHealth contains HEALTH
-                val harmForInvent = minOf(harm.toInt(), invent.characteristics[CharacteristicType.HEALTH]!!)
-                if (harmForInvent > 0) {
-                    invent.characteristics[CharacteristicType.HEALTH] =
-                        invent.characteristics[CharacteristicType.HEALTH]!! - harmForInvent
-                    mutableHarm -= harmForInvent
-                    if (mutableHarm == 0)
-                        return
-                }
-            }
-        }
-        curHealth = maxOf(0u, curHealth - mutableHarm.toUInt())
-    }
+    /** Return true if character is alive, false otherwise */
+    fun isAlive(): Boolean = curHealth > 0u
+}
 
-    /** Return true uf character is alive, false otherwise */
-    fun isAlive() = curHealth > 0u
+/** Character game object interface, which can be controlled by player on NPC */
+interface Character : ImmutableCharacter {
+    /** Decrease health of character on [harm]*/
+    fun healthDecrease(harm: UInt)
 
     /** Pick [item] to the inventory */
-    fun pickInventory(item: Inventory) {
-        _inventory.add(item)
-    }
+    fun pickInventory(item: Inventory)
 
-    /** Pick [item] to the currently used */
-    fun useInventory(inventoryId: SearchId): Boolean {
-        val inventory = _inventory.firstOrNull{ it.id == inventoryId } ?: return false
-        _usingInventory.add(inventory)
-        return true
-    }
+    /** Add inventory to the currently used, if character has inventory with this [inventory]
+     *  Returns true if character has this inventory and inventory is used now, false otherwise*/
+    fun useInventory(inventoryId: SearchId): Boolean
 
-    fun disableInventory(inventoryId: SearchId): Boolean {
-        return _usingInventory.removeIf { it.id == inventoryId }
-    }
+    /** Disable inventory, if character is using inventory with this [inventoryId] now.
+     *  Returns true if character is using this inventory, false otherwise*/
+    fun disableInventory(inventoryId: SearchId): Boolean
 
-    /** Attack other character. It decreases health by value of this character harm */
-    fun attack(other: Character) {
-        other.healthDecrease(_usingInventory.sumOf {
-            it.characteristics.getOrDefault(CharacteristicType.HARM, 0)
-        }.toUInt())
-    }
-
-    override val id: SearchId = UUID.randomUUID()
+    /** Attack another character */
+    fun attack(other: Character)
 }
