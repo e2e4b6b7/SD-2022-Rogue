@@ -47,12 +47,14 @@ class Character(val maxHealth: UInt, override val presentationId: PresentationId
     }
 
     /** Pick [item] to the currently used */
-    fun useInventory(item: Inventory) {
-        _usingInventory.add(item)
+    fun useInventory(inventoryId: SearchId): Boolean {
+        val inventory = _inventory.firstOrNull{ it.id == inventoryId } ?: return false
+        _usingInventory.add(inventory)
+        return true
     }
 
-    fun disableInventory(clothId: SearchId) {
-        _usingInventory.removeIf { it.id == clothId }
+    fun disableInventory(inventoryId: SearchId): Boolean {
+        return _usingInventory.removeIf { it.id == inventoryId }
     }
 
     /** Attack other character. It decreases health by value of this character harm */

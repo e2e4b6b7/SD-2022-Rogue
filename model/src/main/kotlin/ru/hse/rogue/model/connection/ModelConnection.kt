@@ -13,6 +13,7 @@ interface ModelCharacterConnection : ModelViewConnection {
     val character: Character
     fun move(direction: Direction): Boolean
     fun useInventory(inventoryId: SearchId): Boolean
+    fun disableInventory(inventorId: SearchId): Boolean
     fun getSearchableWithPos(id: SearchId): Pair<Searchable, Position>?
     fun attack(direction: Direction): Boolean
 }

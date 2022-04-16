@@ -75,18 +75,6 @@ class GameMap(val width: Int, val height: Int) {
     }
 
     @Synchronized
-    fun useInventory(characterId: SearchId, inventoryId: SearchId): Boolean {
-        val character = searchObject(characterId)?.first ?: return false
-        if (character !is Character)
-            return false
-        val inventory = searchObject(inventoryId)?.first ?: return false
-        if (inventory !is Inventory)
-            return false
-        character.useInventory(inventory)
-        return true
-    }
-
-    @Synchronized
     fun move(characterId: SearchId, direction: Direction): Boolean {
         val (character, pos) = searchObject(characterId) ?: return false
         if (character !is Character)

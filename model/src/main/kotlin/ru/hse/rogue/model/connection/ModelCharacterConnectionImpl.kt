@@ -11,7 +11,8 @@ class ModelCharacterConnectionImpl internal constructor(
 ) : ModelCharacterConnection {
     override val map: List<List<MapElement>> get() = gameMap.mapElements
     override fun move(direction: Direction) = gameMap.move(character.id, direction)
-    override fun useInventory(inventoryId: SearchId) = gameMap.useInventory(character.id, inventoryId)
+    override fun useInventory(inventoryId: SearchId) = character.useInventory(inventoryId)
+    override fun disableInventory(inventorId: SearchId) = character.disableInventory(inventorId)
     override fun getSearchableWithPos(id: SearchId) = gameMap.searchObject(id)
     override fun attack(direction: Direction): Boolean = gameMap.attack(character.id, direction)
 }
