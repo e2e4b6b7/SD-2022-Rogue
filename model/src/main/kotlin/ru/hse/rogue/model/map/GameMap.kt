@@ -2,8 +2,7 @@ package ru.hse.rogue.model.map
 
 import ru.hse.rogue.model.gameobject.*
 import ru.hse.rogue.model.gameobject.character.Character
-import ru.hse.rogue.model.utils.applyDirection
-import ru.hse.rogue.model.utils.isInBounds
+import ru.hse.rogue.model.utils.*
 
 
 typealias MapElement = List<GameObject>
@@ -17,14 +16,12 @@ class GameMap(val width: Int, val height: Int) {
     private val searchableObjectsMap = mutableMapOf<SearchId, Pair<Searchable, Position>>()
 
     /** Map. In every position there are a stack of [GameObject] */
-    val mapElements: List<List<MutableMapElement>> = Array(width) {
-        Array(height) {
-            mutableListOf<GameObject>().apply { add(FreeSpace) }
-        }.asList()
-    }.asList()
+    val mapElements: Immutable2DArray<MutableMapElement> = Immutable2DArray(width, height) { _, _ ->
+        mutableListOf<GameObject>().apply { add(FreeSpace) }
+    }
 
     /** Get [MapElement] from ([x], [y]) */
-    operator fun get(x: Int, y: Int): MapElement = mapElements[x][y]
+    operator fun get(x: Int, y: Int): MapElement = mapElements[x, y]
     operator fun get(position: Position) = this[position.x, position.y]
 
     /** Add [gameObject] to position ([x], [y]). Append [gameObject] to the top of stack */
@@ -33,7 +30,7 @@ class GameMap(val width: Int, val height: Int) {
             assert(gameObject.id !in searchableObjectsMap)
             searchableObjectsMap[gameObject.id] = Pair(gameObject, Position(x, y))
         }
-        mapElements[x][y].add(gameObject)
+        mapElements[x, y].add(gameObject)
     }
 
     operator fun set(position: Position, gameObject: GameObject) {
@@ -42,7 +39,7 @@ class GameMap(val width: Int, val height: Int) {
 
     /** Remove gameObject from top of the stack on position ([x], [y]) */
     fun pop(x: Int, y: Int): GameObject {
-        val gameObject = mapElements[x][y].removeLast()
+        val gameObject = mapElements[x, y].removeLast()
         if (gameObject is Searchable) {
             searchableObjectsMap.remove(gameObject.id)
         }

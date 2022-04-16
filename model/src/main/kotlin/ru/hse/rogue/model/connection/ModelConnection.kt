@@ -3,9 +3,10 @@ package ru.hse.rogue.model.connection
 import ru.hse.rogue.model.gameobject.*
 import ru.hse.rogue.model.gameobject.character.Character
 import ru.hse.rogue.model.map.*
+import ru.hse.rogue.model.utils.Immutable2DArray
 
 interface ModelViewConnection {
-    val map: List<List<MapElement>>
+    val map: Immutable2DArray<out MapElement>
 }
 
 interface ModelCharacterConnection : ModelViewConnection {
