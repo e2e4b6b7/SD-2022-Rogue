@@ -25,9 +25,9 @@ fun Position.directionsTo(otherPos: Position): List<Direction> {
         res.add(Direction.LEFT)
     }
     if (otherPos.y > y) {
-        res.add(Direction.UP)
-    } else if (otherPos.y < y) {
         res.add(Direction.DOWN)
+    } else if (otherPos.y < y) {
+        res.add(Direction.UP)
     }
     return res
 }
