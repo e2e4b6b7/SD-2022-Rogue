@@ -42,7 +42,7 @@ internal class CharacterImpl(startHealth: UInt, override val presentationId: Pre
                 }
             }
         }
-        _curHealth = maxOf(0u, _curHealth - mutableHarm.toUInt())
+        _curHealth = maxOf(0, _curHealth.toInt() - mutableHarm).toUInt()
     }
 
     /** Pick [item] to the inventory */
