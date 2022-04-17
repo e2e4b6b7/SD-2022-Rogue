@@ -19,6 +19,11 @@
 		"pathTemplate": "images/hero/Idle ($).png",
 		"stepMillis": 50
 	},
+	"Villager": {
+		"type": "Sprite",
+		"pathTemplate": "images/hero/Idle ($).png",
+		"stepMillis": 50
+	},
 	"Zombie": {
 		"type": "Sprite",
 		"pathTemplate": "images/zombie/Idle ($).png",
@@ -44,5 +49,30 @@
 		"type": "Image",
 		"path": "images/Inventory Background.jpg",
 		"policy": "Crop"
+	},
+	"Axe": {
+		"type": "Image",
+		"path": "images/Axe.png",
+		"policy": "Scale"
+	},
+	"Dagger": {
+		"type": "Image",
+		"path": "images/Dagger.png",
+		"policy": "Scale"
+	},
+	"Sword": {
+		"type": "Image",
+		"path": "images/Sword.png",
+		"policy": "Scale"
+	},
+	"ExtraHealth": {
+		"type": "Image",
+		"path": "images/Health Icon.png",
+		"policy": "Scale"
+	},
+	"Chain Mail Armor": {
+		"type": "Image",
+		"path": "images/Chain Mail Armor.png",
+		"policy": "Scale"
 	}
 }
