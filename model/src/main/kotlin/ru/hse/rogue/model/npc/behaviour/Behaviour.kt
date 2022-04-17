@@ -11,11 +11,8 @@ interface Behaviour {
     companion object {
         fun createRandomBehaviour(player: ImmutableCharacter): Behaviour {
             return mutableListOf(
-               // AggressiveRandomWalker,
-                //AggressiveStander,
-                // AggressiveStupidHunter(player, (2..5).random()),
-                CowardWalker(player, (2..5).random()),
-                //FriendlyRandomWalker,
+                AggressiveStupidHunter(player, (5..8).random()),
+                CowardWalker(player, (5..8).random()),
                 FriendlyStander
             ).random()
         }

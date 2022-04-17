@@ -15,12 +15,14 @@ typealias LayoutID = String
 data class GameConfig(val enemiesCount: Int, val healthBonusCount: Int, val width: Int, val height: Int)
 
 fun init(config: GameConfig): Module {
-    val game = Game(LevelGenerator.generateRandomLevel(
-        config.enemiesCount,
-        config.healthBonusCount,
-        config.width,
-        config.height
-    ))
+    val game = Game(
+        LevelGenerator.generateRandomLevel(
+            config.enemiesCount,
+            config.healthBonusCount,
+            config.width,
+            config.height
+        )
+    )
     return module {
         single { Executors.newScheduledThreadPool(7) }
         single { game.playerCharacterModelConnection }

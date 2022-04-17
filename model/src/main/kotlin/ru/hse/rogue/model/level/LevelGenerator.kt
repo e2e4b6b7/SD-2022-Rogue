@@ -4,8 +4,7 @@ import ru.hse.rogue.model.gameobject.*
 import ru.hse.rogue.model.gameobject.character.CharacterImpl
 import ru.hse.rogue.model.gameobject.character.ImmutableCharacter
 import ru.hse.rogue.model.map.GameMap
-import ru.hse.rogue.model.npc.behaviour.AggressiveStupidHunter
-import ru.hse.rogue.model.npc.behaviour.Behaviour
+import ru.hse.rogue.model.npc.behaviour.*
 
 /** Class for random generation of levels */
 object LevelGenerator {
@@ -26,7 +25,7 @@ object LevelGenerator {
             addSearchableToMap(level, ExtraHealth(5))
         }
         addSearchableToMap(level, Cloth("Chain Mail Armor", 50, "Chain Mail Armor"))
-        (0 until  2).forEach { _ ->
+        (0 until 2).forEach { _ ->
             addSearchableToMap(level, generateWeapon())
         }
         return level
@@ -41,12 +40,22 @@ object LevelGenerator {
     }
 
     private fun generateCharacter(player: ImmutableCharacter): Pair<CharacterImpl, Behaviour> {
-        val character = CharacterImpl(RANGE_HEALTH.random())
         val behaviour = Behaviour.createRandomBehaviour(player)
-        if (behaviour is AggressiveStupidHunter) {
-            val weapon = generateWeapon()
-            character.pickInventory(weapon)
-            character.useInventory(weapon.id)
+        val character: CharacterImpl
+        when (behaviour) {
+            is AggressiveStupidHunter -> {
+                character = CharacterImpl(RANGE_HEALTH.random(), "Zombie")
+                val weapon = generateWeapon()
+                character.pickInventory(weapon)
+                character.useInventory(weapon.id)
+            }
+            is CowardWalker -> {
+                character = CharacterImpl(RANGE_HEALTH.random(), "Robot")
+            }
+            is FriendlyStander -> {
+                character = CharacterImpl(RANGE_HEALTH.random(), "Villager")
+            }
+            else -> throw java.lang.IllegalStateException("Unknown type")
         }
         return Pair(character, behaviour)
     }
