@@ -47,7 +47,12 @@ internal class LevelGeneratorTest {
         (0..10).forEach { enemiesCount ->
             (20..30).forEach { width ->
                 (20..30).forEach { height ->
-                    val level = LevelGenerator.generateRandomLevel(enemiesCount, width, height)
+                    val level = LevelGenerator.generateRandomLevel(
+                        enemiesCount,
+                        width,
+                        height,
+                        CharacterImpl(100u)
+                    )
                     val visited = Array(height) {
                         Array(width) {
                             false

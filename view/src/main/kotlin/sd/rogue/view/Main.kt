@@ -24,7 +24,7 @@ fun repaintCycle(frame: JFrame) {
 }
 
 fun main() {
-    val config = GameConfig(5, 63, 40)
+    val config = GameConfig(1, 5, 63, 40)
 
     startKoin {
         modules(init(config))

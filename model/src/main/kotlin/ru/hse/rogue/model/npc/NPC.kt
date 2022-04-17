@@ -8,7 +8,7 @@ import ru.hse.rogue.model.utils.SleepingTimer
 class NPC(
     private val modelConnection: ModelCharacterConnection,
     private val behaviour: Behaviour,
-    sleepTimeMillis: Long = 30
+    sleepTimeMillis: Long = 1000
 ) {
     private val sleepingTimer = SleepingTimer(sleepTimeMillis)
     fun run() {

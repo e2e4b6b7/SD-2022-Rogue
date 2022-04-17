@@ -8,6 +8,9 @@ import java.util.*
 internal class CharacterImpl(startHealth: UInt, override val presentationId: PresentationId = "Hero") : Character {
     private var _curHealth: UInt = startHealth
 
+    private var curExperience: UInt = 0u
+    var currentLevel: UInt = 1u
+
     /** Current health of the character*/
     override val curHealth: UInt
         get() = _curHealth + _usingInventory.sumOf {
@@ -45,6 +48,15 @@ internal class CharacterImpl(startHealth: UInt, override val presentationId: Pre
         _curHealth = maxOf(0, _curHealth.toInt() - mutableHarm).toUInt()
     }
 
+    override fun experienceIncrease(experienceIncome: UInt) {
+        curExperience += experienceIncome
+        if (curExperience >= EXP_IN_LEVEL) {
+            _curHealth += HEALTH_LEVEL_REWARD
+        }
+        currentLevel += (curExperience / EXP_IN_LEVEL)
+        curExperience %= EXP_IN_LEVEL
+    }
+
     /** Pick [item] to the inventory */
     override fun pickInventory(item: Inventory) {
         _inventory.add(item)
@@ -71,4 +83,10 @@ internal class CharacterImpl(startHealth: UInt, override val presentationId: Pre
     }
 
     override val id: SearchId = UUID.randomUUID()
+
+    companion object {
+        private const val EXP_IN_LEVEL = 10u
+        const val EXP_PER_KILL = 1u
+        private const val HEALTH_LEVEL_REWARD = 10u
+    }
 }

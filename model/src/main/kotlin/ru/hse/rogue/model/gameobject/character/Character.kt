@@ -22,6 +22,9 @@ interface Character : ImmutableCharacter {
     /** Decrease health of character on [harm]*/
     fun healthDecrease(harm: UInt)
 
+    /** Increase experience by [experienceIncome]*/
+    fun experienceIncrease(experienceIncome: UInt)
+
     /** Pick [item] to the inventory */
     fun pickInventory(item: Inventory)
 
