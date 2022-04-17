@@ -65,7 +65,7 @@
 		"path": "images/Sword.png",
 		"policy": "Scale"
 	},
-	"ExtraHealth": {
+	"Extra health": {
 		"type": "Image",
 		"path": "images/Health Icon.png",
 		"policy": "Scale"
