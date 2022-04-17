@@ -4,6 +4,7 @@ import ru.hse.rogue.model.gameobject.FreeSpace
 import ru.hse.rogue.model.gameobject.Wall
 import ru.hse.rogue.model.gameobject.character.CharacterImpl
 import ru.hse.rogue.model.map.GameMap
+import ru.hse.rogue.model.npc.behaviour.Behaviour
 
 /** Class for random generation of levels */
 object LevelGenerator {
@@ -18,8 +19,8 @@ object LevelGenerator {
         val map = GameMap(width, height)
         val player = CharacterImpl(PLAYER_HEALTH)
         val level = Level(map, player)
-        buildLevel(level, enemiesCount)
         addPlayer(level)
+        buildLevel(level, enemiesCount)
         return level
     }
 
@@ -27,7 +28,7 @@ object LevelGenerator {
         if (level.map[x, y].last() is FreeSpace) {
             val character = CharacterImpl(RANGE_HEALTH.random())
             level.map[x, y] = character
-            level.NPCCharacters.add(character)
+            level.NPCCharacters.add(Pair(character, Behaviour.createRandomBehaviour(level.player)))
             return true
         }
         return false

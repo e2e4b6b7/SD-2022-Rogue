@@ -6,6 +6,7 @@ import sd.rogue.view.timers.SleepingTimer
 import sd.rogue.viewmodel.GameConfig
 import sd.rogue.viewmodel.init
 import java.awt.GraphicsEnvironment
+import java.awt.Toolkit
 import java.nio.file.Path
 import javax.swing.JFrame
 
@@ -33,7 +34,8 @@ fun main() {
 
     val frame = JFrame("Rogue").apply {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-        GraphicsEnvironment.getLocalGraphicsEnvironment().defaultScreenDevice.fullScreenWindow = this
+//        GraphicsEnvironment.getLocalGraphicsEnvironment().defaultScreenDevice.fullScreenWindow = this
+        size = Toolkit.getDefaultToolkit().screenSize
     }
 
     LayoutController(frame).apply {
