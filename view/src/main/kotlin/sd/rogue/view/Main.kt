@@ -23,7 +23,7 @@ fun repaintCycle(frame: JFrame) {
 }
 
 fun main() {
-    val config = GameConfig(15, 10, 63, 40)
+    val config = GameConfig(15, 10, 63, 39)
 
     startKoin {
         modules(init(config))
@@ -33,7 +33,6 @@ fun main() {
 
     val frame = JFrame("Rogue").apply {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-//        GraphicsEnvironment.getLocalGraphicsEnvironment().defaultScreenDevice.fullScreenWindow = this
         size = Toolkit.getDefaultToolkit().screenSize
     }
 
