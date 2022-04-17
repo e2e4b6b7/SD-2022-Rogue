@@ -20,7 +20,7 @@ class Cloth(override val name: String, health: Int = 0, override val presentatio
 
 /** Class for representing items which give character extra health*/
 class ExtraHealth(extraHealth: Int, override val presentationId: PresentationId = "Extra health") : Inventory {
-    override val name: String? = null
+    override val name: String = "Extra health"
     override val characteristics = mutableMapOf(Pair(CharacteristicType.HEALTH, extraHealth))
     override val id: SearchId = UUID.randomUUID()
 }
