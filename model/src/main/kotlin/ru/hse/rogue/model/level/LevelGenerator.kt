@@ -24,7 +24,7 @@ object LevelGenerator {
         (0 until healthBonusCount).forEach { _ ->
             addSearchableToMap(level, ExtraHealth(5))
         }
-        addSearchableToMap(level, Cloth("Chain Mail Armor", 50, "Chain Mail Armor"))
+        addSearchableToMap(level, Cloth("Chain Mail", 50, "Chain Mail"))
         (0 until 2).forEach { _ ->
             addSearchableToMap(level, generateWeapon())
         }

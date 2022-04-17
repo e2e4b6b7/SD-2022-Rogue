@@ -7,6 +7,12 @@ interface ImmutableCharacter : Searchable {
     /** Current health of the character*/
     val curHealth: UInt
 
+    val curDamage: UInt
+
+    val curLevel: UInt
+
+    val curExperience: UInt
+
     /** Which inventory items has been picked by character*/
     val inventory: List<Inventory>
 

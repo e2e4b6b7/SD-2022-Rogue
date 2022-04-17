@@ -4,18 +4,29 @@ import ru.hse.rogue.model.gameobject.*
 import java.util.*
 
 
-/** [Character] implementation class. May be player or NPC with start health [startHealth]*/
+/** [Character] implementation class. May be player or NPC with start health */
 internal class CharacterImpl(startHealth: UInt, override val presentationId: PresentationId = "Hero") : Character {
     private var _curHealth: UInt = startHealth
 
-    private var curExperience: UInt = 0u
-    var currentLevel: UInt = 1u
+    override var curExperience: UInt = 0u
+        private set
+
+    override var curLevel: UInt = 1u
+        private set
 
     /** Current health of the character*/
     override val curHealth: UInt
         get() = _curHealth + _usingInventory.sumOf {
             it.characteristics.getOrDefault(
                 CharacteristicType.HEALTH,
+                0
+            )
+        }.toUInt()
+
+    override val curDamage: UInt
+        get() = _usingInventory.sumOf {
+            it.characteristics.getOrDefault(
+                CharacteristicType.HARM,
                 0
             )
         }.toUInt()
@@ -53,7 +64,7 @@ internal class CharacterImpl(startHealth: UInt, override val presentationId: Pre
         if (curExperience >= EXP_IN_LEVEL) {
             _curHealth += HEALTH_LEVEL_REWARD
         }
-        currentLevel += (curExperience / EXP_IN_LEVEL)
+        curLevel += (curExperience / EXP_IN_LEVEL)
         curExperience %= EXP_IN_LEVEL
     }
 
