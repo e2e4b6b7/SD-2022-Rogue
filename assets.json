@@ -11,12 +11,22 @@
 	},
 	"Grass": {
 		"type": "Image",
-		"path": "images/Grass.jpg",
+		"path": "images/Grass.png",
 		"policy": "ScaleFull"
 	},
 	"Hero": {
 		"type": "Sprite",
-		"pathTemplate": "images/png/Dead ($).png",
+		"pathTemplate": "images/hero/Idle ($).png",
+		"stepMillis": 50
+	},
+	"Zombie": {
+		"type": "Sprite",
+		"pathTemplate": "images/zombie/Idle ($).png",
+		"stepMillis": 50
+	},
+	"Robot": {
+		"type": "Sprite",
+		"pathTemplate": "images/robot/Idle ($).png",
 		"stepMillis": 50
 	},
 	"Characteristics Background": {
