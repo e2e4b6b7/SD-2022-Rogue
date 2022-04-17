@@ -21,6 +21,11 @@ class CharacteristicsViewModel : KoinComponent {
     }
 
     private fun fetchCharacteristics(): MutableList<Characteristic> {
-        return mutableListOf(Characteristic("Health Icon", connection.character.curHealth.toString()))
+        return mutableListOf(
+            Characteristic("Health Icon", connection.character.curHealth.toString()),
+            Characteristic("Damage", connection.character.curDamage.toString()),
+            Characteristic("Level", connection.character.curLevel.toString()),
+            Characteristic("Experience", connection.character.curExperience.toString()),
+        )
     }
 }

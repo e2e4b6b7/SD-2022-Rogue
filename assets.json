@@ -74,5 +74,20 @@
 		"type": "Image",
 		"path": "images/Chain Mail Armor.png",
 		"policy": "Scale"
+	},
+	"Damage": {
+		"type": "Image",
+		"path": "images/Damage.png",
+		"policy": "Scale"
+	},
+	"Level": {
+		"type": "Image",
+		"path": "images/Level.png",
+		"policy": "Scale"
+	},
+	"Experience": {
+		"type": "Image",
+		"path": "images/Experience.png",
+		"policy": "Scale"
 	}
 }
