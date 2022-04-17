@@ -16,11 +16,31 @@ class InventoryViewModel : KoinComponent {
         get<ScheduledExecutorService>().scheduleAtFixedRate(this::updateItems, 15, 15, TimeUnit.MILLISECONDS)
     }
 
+    fun interact(idx: Int) {
+        require(itemsMutable.indices.contains(idx))
+        if (itemsMutable[idx].enabled) {
+            connection.disableInventory(itemsMutable[idx].searchId)
+        } else {
+            connection.useInventory(itemsMutable[idx].searchId)
+        }
+    }
+
     private fun updateItems() {
         itemsMutable = fetchItems()
     }
 
-    private fun fetchItems(): MutableList<InventoryItem> {
-        return connection.character.inventory.mapTo(mutableListOf()) { InventoryItem(it.presentationId, it.name ?: "") }
+    private fun fetchItems(): MutableList<InventoryItemInternal> {
+        val newItems = mutableListOf<InventoryItemInternal>()
+        connection.character.usingInventory
+            .mapTo(newItems) {
+                InventoryItemInternal(it.presentationId, it.name ?: "", true, it.id)
+            }
+        val used = connection.character.usingInventory.asSequence().map { it.id }.toSet()
+        connection.character.inventory
+            .filter { !used.contains(it.id) }
+            .mapTo(newItems) {
+                InventoryItemInternal(it.presentationId, it.name ?: "", false, it.id)
+            }
+        return newItems
     }
 }
