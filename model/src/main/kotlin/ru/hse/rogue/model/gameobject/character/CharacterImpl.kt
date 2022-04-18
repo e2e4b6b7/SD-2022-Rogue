@@ -1,18 +1,35 @@
 package ru.hse.rogue.model.gameobject.character
 
 import ru.hse.rogue.model.gameobject.*
+import java.lang.Double.min
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.random.Random.Default.nextDouble
 
 
-/** [Character] implementation class. May be player or NPC with start health [startHealth]*/
+/** [Character] implementation class. May be player or NPC with start health */
 internal class CharacterImpl(startHealth: UInt, override val presentationId: PresentationId = "Hero") : Character {
     private var _curHealth: UInt = startHealth
+
+    override var curExperience: UInt = 0u
+        private set
+
+    override var curLevel: UInt = 1u
+        private set
 
     /** Current health of the character*/
     override val curHealth: UInt
         get() = _curHealth + _usingInventory.sumOf {
             it.characteristics.getOrDefault(
                 CharacteristicType.HEALTH,
+                0
+            )
+        }.toUInt()
+
+    override val curDamage: UInt
+        get() = _usingInventory.sumOf {
+            it.characteristics.getOrDefault(
+                CharacteristicType.HARM,
                 0
             )
         }.toUInt()
@@ -45,6 +62,15 @@ internal class CharacterImpl(startHealth: UInt, override val presentationId: Pre
         _curHealth = maxOf(0, _curHealth.toInt() - mutableHarm).toUInt()
     }
 
+    override fun experienceIncrease(experienceIncome: UInt) {
+        curExperience += experienceIncome
+        if (curExperience >= EXP_IN_LEVEL) {
+            _curHealth += HEALTH_LEVEL_REWARD
+        }
+        curLevel += (curExperience / EXP_IN_LEVEL)
+        curExperience %= EXP_IN_LEVEL
+    }
+
     /** Pick [item] to the inventory */
     override fun pickInventory(item: Inventory) {
         _inventory.add(item)
@@ -63,12 +89,28 @@ internal class CharacterImpl(startHealth: UInt, override val presentationId: Pre
         return _usingInventory.removeIf { it.id == inventoryId }
     }
 
-    /** Attack other character. It decreases health by value of this character harm */
+    /** Attack other character. It decreases health by value of this character harm and can stun him */
     override fun attack(other: Character) {
         other.healthDecrease(_usingInventory.sumOf {
             it.characteristics.getOrDefault(CharacteristicType.HARM, 0)
         }.toUInt())
+        val prob = min(1.0,
+            _usingInventory.sumOf {
+                it.characteristics.getOrDefault(CharacteristicType.STUN, 0) / 100.0
+            }
+        )
+        if (!other.isStunned.get()) {
+            other.isStunned.set(prob > nextDouble())
+        }
     }
 
+    override val isStunned: AtomicBoolean = AtomicBoolean(false)
+
     override val id: SearchId = UUID.randomUUID()
+
+    companion object {
+        private const val EXP_IN_LEVEL = 10u
+        const val EXP_PER_KILL = 1u
+        private const val HEALTH_LEVEL_REWARD = 10u
+    }
 }

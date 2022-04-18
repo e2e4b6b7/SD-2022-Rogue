@@ -1,7 +1,8 @@
 package ru.hse.rogue.model.level
 
 import org.junit.jupiter.api.Test
-import ru.hse.rogue.model.gameobject.*
+import ru.hse.rogue.model.gameobject.FreeSpace
+import ru.hse.rogue.model.gameobject.Wall
 import ru.hse.rogue.model.gameobject.character.CharacterImpl
 import ru.hse.rogue.model.map.Position
 import kotlin.test.assertEquals
@@ -47,7 +48,12 @@ internal class LevelGeneratorTest {
         (0..10).forEach { enemiesCount ->
             (20..30).forEach { width ->
                 (20..30).forEach { height ->
-                    val level = LevelGenerator.generateRandomLevel(enemiesCount, width, height)
+                    val level = LevelGenerator.generateRandomLevel(
+                        enemiesCount,
+                        5,
+                        width,
+                        height
+                    )
                     val visited = Array(height) {
                         Array(width) {
                             false

@@ -11,12 +11,27 @@
 	},
 	"Grass": {
 		"type": "Image",
-		"path": "images/Grass.jpg",
+		"path": "images/Grass.png",
 		"policy": "ScaleFull"
 	},
 	"Hero": {
 		"type": "Sprite",
-		"pathTemplate": "images/png/Dead ($).png",
+		"pathTemplate": "images/hero/Idle ($).png",
+		"stepMillis": 50
+	},
+	"Villager": {
+		"type": "Sprite",
+		"pathTemplate": "images/hero/Idle ($).png",
+		"stepMillis": 50
+	},
+	"Zombie": {
+		"type": "Sprite",
+		"pathTemplate": "images/zombie/Idle ($).png",
+		"stepMillis": 50
+	},
+	"Robot": {
+		"type": "Sprite",
+		"pathTemplate": "images/robot/Idle ($).png",
 		"stepMillis": 50
 	},
 	"Characteristics Background": {
@@ -34,5 +49,45 @@
 		"type": "Image",
 		"path": "images/Inventory Background.jpg",
 		"policy": "Crop"
+	},
+	"Axe": {
+		"type": "Image",
+		"path": "images/Axe.png",
+		"policy": "Scale"
+	},
+	"Dagger": {
+		"type": "Image",
+		"path": "images/Dagger.png",
+		"policy": "Scale"
+	},
+	"Sword": {
+		"type": "Image",
+		"path": "images/Sword.png",
+		"policy": "Scale"
+	},
+	"Extra health": {
+		"type": "Image",
+		"path": "images/Health Icon.png",
+		"policy": "Scale"
+	},
+	"Chain Mail": {
+		"type": "Image",
+		"path": "images/Chain Mail Armor.png",
+		"policy": "Scale"
+	},
+	"Damage": {
+		"type": "Image",
+		"path": "images/Damage.png",
+		"policy": "Scale"
+	},
+	"Level": {
+		"type": "Image",
+		"path": "images/Level.png",
+		"policy": "Scale"
+	},
+	"Experience": {
+		"type": "Image",
+		"path": "images/Experience.png",
+		"policy": "Scale"
 	}
 }

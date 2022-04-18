@@ -64,8 +64,10 @@ class GameMap(val width: Int, val height: Int) {
         val dirObject = this[dirPos].last()
         if (dirObject is CharacterImpl) {
             character.attack(dirObject)
-            if (!dirObject.isAlive())
+            if (!dirObject.isAlive()) {
+                character.experienceIncrease(CharacterImpl.EXP_PER_KILL)
                 this.pop(dirPos)
+            }
             return true
         }
         return false
@@ -81,9 +83,11 @@ class GameMap(val width: Int, val height: Int) {
         if (!dirPos.isInBounds(width, height))
             return false
         val dirObject = this[dirPos].last()
-        if (!dirPos.isInBounds(width, height) || dirObject is CharacterImpl || dirObject is Wall)
+        if (dirObject is CharacterImpl) {
+            return attack(characterId, direction)
+        }
+        if (!dirPos.isInBounds(width, height) || dirObject is Wall)
             return false
-
         if (dirObject is Inventory) {
             character.pickInventory(dirObject)
             this.pop(dirPos)

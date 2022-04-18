@@ -5,7 +5,7 @@ import sd.rogue.view.assets.Assets
 import sd.rogue.view.timers.SleepingTimer
 import sd.rogue.viewmodel.GameConfig
 import sd.rogue.viewmodel.init
-import java.awt.GraphicsEnvironment
+import java.awt.Toolkit
 import java.nio.file.Path
 import javax.swing.JFrame
 
@@ -23,7 +23,7 @@ fun repaintCycle(frame: JFrame) {
 }
 
 fun main() {
-    val config = GameConfig(5, 63, 40)
+    val config = GameConfig(15, 10, 63, 39)
 
     startKoin {
         modules(init(config))
@@ -33,7 +33,7 @@ fun main() {
 
     val frame = JFrame("Rogue").apply {
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-        GraphicsEnvironment.getLocalGraphicsEnvironment().defaultScreenDevice.fullScreenWindow = this
+        size = Toolkit.getDefaultToolkit().screenSize
     }
 
     LayoutController(frame).apply {

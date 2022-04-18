@@ -1,11 +1,20 @@
 package ru.hse.rogue.model.gameobject.character
 
 import ru.hse.rogue.model.gameobject.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 /** Interface for watching character game object */
 interface ImmutableCharacter : Searchable {
     /** Current health of the character*/
     val curHealth: UInt
+
+    val curDamage: UInt
+
+    val curLevel: UInt
+
+    val curExperience: UInt
+
+    val isStunned: AtomicBoolean
 
     /** Which inventory items has been picked by character*/
     val inventory: List<Inventory>
@@ -21,6 +30,9 @@ interface ImmutableCharacter : Searchable {
 interface Character : ImmutableCharacter {
     /** Decrease health of character on [harm]*/
     fun healthDecrease(harm: UInt)
+
+    /** Increase experience by [experienceIncome]*/
+    fun experienceIncrease(experienceIncome: UInt)
 
     /** Pick [item] to the inventory */
     fun pickInventory(item: Inventory)
