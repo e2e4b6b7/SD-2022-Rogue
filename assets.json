@@ -70,7 +70,7 @@
 		"path": "images/Health Icon.png",
 		"policy": "Scale"
 	},
-	"Chain Mail Armor": {
+	"Chain Mail": {
 		"type": "Image",
 		"path": "images/Chain Mail Armor.png",
 		"policy": "Scale"
