@@ -64,9 +64,7 @@ class GameMap(val width: Int, val height: Int) {
         val dirObject = this[dirPos].last()
         if (dirObject is CharacterImpl) {
             character.attack(dirObject)
-            println("Attack ${dirObject.presentationId} with health ${dirObject.curHealth}")
             if (!dirObject.isAlive()) {
-                println("Killed")
                 character.experienceIncrease(CharacterImpl.EXP_PER_KILL)
                 this.pop(dirPos)
             }
@@ -90,7 +88,6 @@ class GameMap(val width: Int, val height: Int) {
         }
         if (!dirPos.isInBounds(width, height) || dirObject is Wall)
             return false
-        println("I am here $dirObject")
         if (dirObject is Inventory) {
             character.pickInventory(dirObject)
             this.pop(dirPos)

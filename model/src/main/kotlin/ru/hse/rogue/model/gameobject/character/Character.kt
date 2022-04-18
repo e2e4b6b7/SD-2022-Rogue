@@ -1,6 +1,7 @@
 package ru.hse.rogue.model.gameobject.character
 
 import ru.hse.rogue.model.gameobject.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 /** Interface for watching character game object */
 interface ImmutableCharacter : Searchable {
@@ -12,6 +13,8 @@ interface ImmutableCharacter : Searchable {
     val curLevel: UInt
 
     val curExperience: UInt
+
+    val isStunned: AtomicBoolean
 
     /** Which inventory items has been picked by character*/
     val inventory: List<Inventory>

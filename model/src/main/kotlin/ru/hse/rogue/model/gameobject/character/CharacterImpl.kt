@@ -1,7 +1,10 @@
 package ru.hse.rogue.model.gameobject.character
 
 import ru.hse.rogue.model.gameobject.*
+import java.lang.Double.min
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.random.Random.Default.nextDouble
 
 
 /** [Character] implementation class. May be player or NPC with start health */
@@ -86,12 +89,22 @@ internal class CharacterImpl(startHealth: UInt, override val presentationId: Pre
         return _usingInventory.removeIf { it.id == inventoryId }
     }
 
-    /** Attack other character. It decreases health by value of this character harm */
+    /** Attack other character. It decreases health by value of this character harm and can stun him */
     override fun attack(other: Character) {
         other.healthDecrease(_usingInventory.sumOf {
             it.characteristics.getOrDefault(CharacteristicType.HARM, 0)
         }.toUInt())
+        val prob = min(1.0,
+            _usingInventory.sumOf {
+                it.characteristics.getOrDefault(CharacteristicType.STUN, 0) / 100.0
+            }
+        )
+        if (!other.isStunned.get()) {
+            other.isStunned.set(prob > nextDouble())
+        }
     }
+
+    override val isStunned: AtomicBoolean = AtomicBoolean(false)
 
     override val id: SearchId = UUID.randomUUID()
 

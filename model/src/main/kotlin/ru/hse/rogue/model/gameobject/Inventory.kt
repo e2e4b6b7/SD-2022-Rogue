@@ -26,8 +26,16 @@ class ExtraHealth(extraHealth: Int, override val presentationId: PresentationId 
 }
 
 /** Class for representing items which give character new value of harm */
-class Arm(override val name: String, harm: Int, override val presentationId: PresentationId) : Inventory {
-    override val characteristics = mutableMapOf(Pair(CharacteristicType.HARM, harm))
+class Arm(
+    override val name: String,
+    harm: Int,
+    override val presentationId: PresentationId,
+    stunChancePercent: Int = 0
+) : Inventory {
+    override val characteristics = mutableMapOf(
+        Pair(CharacteristicType.HARM, harm),
+        Pair(CharacteristicType.STUN, stunChancePercent)
+    )
     override val id: SearchId = UUID.randomUUID()
 }
 

@@ -25,7 +25,7 @@ object LevelGenerator {
             addSearchableToMap(level, ExtraHealth(5))
         }
         addSearchableToMap(level, Cloth("Chain Mail", 50, "Chain Mail"))
-        (0 until 2).forEach { _ ->
+        (0 until 3).forEach { _ ->
             addSearchableToMap(level, generateWeapon())
         }
         return level
@@ -33,9 +33,9 @@ object LevelGenerator {
 
     private fun generateWeapon(): Arm {
         return listOf(
-            Arm("Axe", 5, "Axe"),
-            Arm("Sword", 7, "Sword"),
-            Arm("Dagger", 3, "Dagger")
+            Arm("Axe", 5, "Axe", 30),
+            Arm("Sword", 7, "Sword", 20),
+            Arm("Dagger", 3, "Dagger", 10)
         ).random()
     }
 
@@ -45,7 +45,7 @@ object LevelGenerator {
         when (behaviour) {
             is AggressiveStupidHunter -> {
                 character = CharacterImpl(RANGE_HEALTH.random(), "Zombie")
-                val weapon = generateWeapon()
+                val weapon = Arm("Zombie Arm", 2, "Zombie Arm", 0)
                 character.pickInventory(weapon)
                 character.useInventory(weapon.id)
             }
