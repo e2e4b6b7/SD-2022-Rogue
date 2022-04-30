@@ -6,10 +6,8 @@ import ru.hse.rogue.model.gameobject.character.ImmutableCharacter
 import ru.hse.rogue.model.level.Mob
 import ru.hse.rogue.model.npc.behaviour.*
 
-class AnimalFactory : AbstractMobFactory {
-    companion object {
-        private val RANGE_HEALTH = (10u..40u)
-    }
+object AnimalFactory : AbstractMobFactory {
+    private val RANGE_HEALTH = (10u..40u)
 
     override fun createAggressive(playerCharacter: ImmutableCharacter): Mob {
         val behaviour = AggressiveStupidHunter(playerCharacter, (5..8).random())

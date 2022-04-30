@@ -12,10 +12,10 @@ class Game(private val level: Level) {
         ModelCharacterConnectionImpl(level.map, level.player)
 
     init {
-        level.NPCCharacters.forEach {
+        level.mobs.forEach {
             // FIX BEHAVIOUR
             thread(start = true, isDaemon = true) {
-                NPC(ModelCharacterConnectionImpl(level.map, it.first), it.second).run()
+                NPC(ModelCharacterConnectionImpl(level.map, it.character), it.behaviour).run()
             }
         }
     }

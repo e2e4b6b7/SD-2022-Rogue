@@ -8,4 +8,11 @@ interface AbstractMobFactory {
     fun createAggressive(playerCharacter: ImmutableCharacter): Mob
     fun createCoward(playerCharacter: ImmutableCharacter): Mob
     fun createFriendly(): Mob
+
+    fun createRandomMob(playerCharacter: ImmutableCharacter) = when ((0..2).random()) {
+        0 -> createAggressive(playerCharacter)
+        1 -> createCoward(playerCharacter)
+        2 -> createFriendly()
+        else -> throw RuntimeException()
+    }
 }
