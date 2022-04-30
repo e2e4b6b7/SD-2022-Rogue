@@ -5,7 +5,7 @@ import ru.hse.rogue.model.gameobject.FreeSpace
 import ru.hse.rogue.model.gameobject.Wall
 import ru.hse.rogue.model.gameobject.character.CharacterImpl
 import ru.hse.rogue.model.level.builder.RandomLevelBuilder
-import ru.hse.rogue.model.level.itemfactory.MedievalInventoryFactory
+import ru.hse.rogue.model.level.inventoryfactory.MedievalInventoryFactory
 import ru.hse.rogue.model.level.mobfactory.AnimalFactory
 import ru.hse.rogue.model.map.Position
 import kotlin.test.assertEquals

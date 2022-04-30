@@ -4,7 +4,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import ru.hse.rogue.model.Game
 import ru.hse.rogue.model.level.builder.RandomLevelBuilder
-import ru.hse.rogue.model.level.itemfactory.MedievalInventoryFactory
+import ru.hse.rogue.model.level.inventoryfactory.MedievalInventoryFactory
 import ru.hse.rogue.model.level.mobfactory.ManLikeMobFactory
 import sd.rogue.viewmodel.characteristics.CharacteristicsViewModel
 import sd.rogue.viewmodel.inventory.InventoryViewModel

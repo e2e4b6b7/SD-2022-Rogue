@@ -1,4 +1,4 @@
-package ru.hse.rogue.model.level.itemfactory
+package ru.hse.rogue.model.level.inventoryfactory
 
 import ru.hse.rogue.model.gameobject.*
 

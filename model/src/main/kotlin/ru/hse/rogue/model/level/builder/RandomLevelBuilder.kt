@@ -3,10 +3,11 @@ package ru.hse.rogue.model.level.builder
 import ru.hse.rogue.model.gameobject.*
 import ru.hse.rogue.model.gameobject.character.CharacterImpl
 import ru.hse.rogue.model.level.*
-import ru.hse.rogue.model.level.itemfactory.AbstractInventoryFactory
+import ru.hse.rogue.model.level.inventoryfactory.AbstractInventoryFactory
 import ru.hse.rogue.model.level.mobfactory.AbstractMobFactory
 import ru.hse.rogue.model.map.GameMap
 
+/** Builder of random generated [Level] */
 class RandomLevelBuilder : LevelBuilder {
     companion object {
         private const val MIN_ROOM_SIZE = 5
@@ -53,12 +54,12 @@ class RandomLevelBuilder : LevelBuilder {
         return this
     }
 
-    override fun setMobFactory(factory: AbstractMobFactory): LevelBuilder {
+    override fun setMobFactory(factory: AbstractMobFactory): RandomLevelBuilder {
         mobFactory = factory
         return this
     }
 
-    override fun setInventoryFactory(factory: AbstractInventoryFactory): LevelBuilder {
+    override fun setInventoryFactory(factory: AbstractInventoryFactory): RandomLevelBuilder {
         inventoryFactory = factory
         return this
     }
