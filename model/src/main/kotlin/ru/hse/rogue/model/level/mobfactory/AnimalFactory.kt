@@ -1,8 +1,7 @@
 package ru.hse.rogue.model.level.mobfactory
 
 import ru.hse.rogue.model.gameobject.Arm
-import ru.hse.rogue.model.gameobject.character.CharacterImpl
-import ru.hse.rogue.model.gameobject.character.ImmutableCharacter
+import ru.hse.rogue.model.gameobject.character.*
 import ru.hse.rogue.model.level.Mob
 import ru.hse.rogue.model.npc.behaviour.*
 
@@ -25,4 +24,13 @@ object AnimalFactory : AbstractMobFactory {
     }
 
     override fun createFriendly() = Mob(CharacterImpl(RANGE_HEALTH.random(), "Cat"), FriendlyStander)
+
+    override fun createAggressiveCloneable(playerCharacter: ImmutableCharacter): Mob {
+        val behaviour = AggressiveStupidHunter(playerCharacter, (5..8).random())
+        val character = CloneableCharacter(RANGE_HEALTH.random(), presentationId = "Bees")
+        val weapon = Arm("Bee sting", 2, "Bee sting")
+        character.pickInventory(weapon)
+        character.useInventory(weapon.id)
+        return Mob(character, behaviour)
+    }
 }
