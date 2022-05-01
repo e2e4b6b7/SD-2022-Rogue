@@ -97,13 +97,21 @@ class GameMap(val width: Int, val height: Int) {
 
     fun addGameObjectNearGameAnotherObject(gameObjectId: SearchId, gameObjectForAddition: GameObject): Boolean {
         val (_, pos) = searchObject(gameObjectId) ?: return false
-        for (direction in Direction.values()) {
+        for (i in 0..5) {
+            val direction = Direction.values().random()
             val dirPosition = pos.applyDirection(direction)
-            val dirObject = this[dirPosition].last()
-            if (dirObject is FreeSpace) {
-                this[dirPosition] = gameObjectForAddition
+            if (addGameObject(dirPosition, gameObjectForAddition)) {
                 return true
             }
+        }
+        return false
+    }
+
+    private fun addGameObject(position: Position, gameObject: GameObject): Boolean {
+        val dirObject = this[position].last()
+        if (dirObject is FreeSpace) {
+            this[position] = gameObject
+            return true
         }
         return false
     }

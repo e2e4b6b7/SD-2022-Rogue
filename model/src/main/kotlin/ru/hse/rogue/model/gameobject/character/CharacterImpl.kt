@@ -9,7 +9,7 @@ import kotlin.random.Random.Default.nextDouble
 
 /** [Character] implementation class. May be player or NPC with start health */
 open class CharacterImpl(startHealth: UInt, override val presentationId: PresentationId = "Hero") : Character {
-    private var _curHealth: UInt = startHealth
+    protected var baseHealth: UInt = startHealth
 
     final override var curExperience: UInt = 0u
         private set
@@ -19,7 +19,7 @@ open class CharacterImpl(startHealth: UInt, override val presentationId: Present
 
     /** Current health of the character*/
     override val curHealth: UInt
-        get() = _curHealth + _usingInventory.sumOf {
+        get() = baseHealth + _usingInventory.sumOf {
             it.characteristics.getOrDefault(
                 CharacteristicType.HEALTH,
                 0
@@ -59,13 +59,13 @@ open class CharacterImpl(startHealth: UInt, override val presentationId: Present
                 }
             }
         }
-        _curHealth = maxOf(0, _curHealth.toInt() - mutableHarm).toUInt()
+        baseHealth = maxOf(0, baseHealth.toInt() - mutableHarm).toUInt()
     }
 
     override fun experienceIncrease(experienceIncome: UInt) {
         curExperience += experienceIncome
         if (curExperience >= EXP_IN_LEVEL) {
-            _curHealth += HEALTH_LEVEL_REWARD
+            baseHealth += HEALTH_LEVEL_REWARD
         }
         curLevel += (curExperience / EXP_IN_LEVEL)
         curExperience %= EXP_IN_LEVEL

@@ -5,7 +5,7 @@ import kotlin.random.Random
 
 class CloneableCharacter(
     startHealth: UInt,
-    private val probability: Double = 0.2,
+    private val probability: Double = 0.03,
     override val presentationId: PresentationId = "Slime"
 ):
     CharacterImpl(startHealth, PresentationId()),
@@ -16,7 +16,14 @@ class CloneableCharacter(
     }
 
     public override fun clone(): CloneableCharacter {
-        return super.clone() as CloneableCharacter
+        val cloneCharacter = CloneableCharacter(baseHealth, probability, presentationId)
+        for (item in inventory) {
+            cloneCharacter.pickInventory(item)
+        }
+        for (item in usingInventory) {
+            cloneCharacter.useInventory(item.id)
+        }
+        return cloneCharacter
     }
 }
 
