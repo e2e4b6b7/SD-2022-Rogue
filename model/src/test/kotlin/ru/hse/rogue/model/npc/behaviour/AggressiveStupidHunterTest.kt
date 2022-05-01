@@ -5,12 +5,15 @@ import ru.hse.rogue.model.connection.ModelCharacterConnectionImpl
 import ru.hse.rogue.model.gameobject.Arm
 import ru.hse.rogue.model.gameobject.character.Character
 import ru.hse.rogue.model.gameobject.character.CharacterImpl
+import ru.hse.rogue.model.level.Level
+import ru.hse.rogue.model.level.Mob
 import ru.hse.rogue.model.map.GameMap
 import ru.hse.rogue.model.map.Position
 import kotlin.test.*
 
 class AggressiveStupidHunterTest : BehaviourTest {
     private lateinit var modelConnection: ModelCharacterConnection
+    private lateinit var level: Level
     private lateinit var gameMap: GameMap
     private lateinit var char: Character
     private lateinit var playerChar: Character
@@ -22,8 +25,9 @@ class AggressiveStupidHunterTest : BehaviourTest {
         gameMap = GameMap(11, 11)
         char = CharacterImpl(startHealth)
         playerChar = CharacterImpl(startHealth)
-        modelConnection = ModelCharacterConnectionImpl(gameMap, char)
         behaviour = AggressiveStupidHunter(playerChar, 9)
+        level = Level(gameMap, playerChar, mutableListOf(Mob(char, behaviour)))
+        modelConnection = ModelCharacterConnectionImpl(level, char)
     }
 
     @Test

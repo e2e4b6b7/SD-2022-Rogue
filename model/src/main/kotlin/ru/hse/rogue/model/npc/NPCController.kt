@@ -22,6 +22,7 @@ class NPCController(
                 behaviour = StunnedBehaviour(behaviour)
             }
             behaviour.doAnything(modelConnection)
+            behaviour.tryToSplit(modelConnection)
             sleepingTimer.await()
         }
     }

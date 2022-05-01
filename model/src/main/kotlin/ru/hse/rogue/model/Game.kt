@@ -9,13 +9,13 @@ import kotlin.concurrent.thread
 
 class Game(private val level: Level) {
     val playerCharacterModelConnection: ModelCharacterConnection =
-        ModelCharacterConnectionImpl(level.map, level.player)
+        ModelCharacterConnectionImpl(level, level.player)
 
     init {
         level.mobs.forEach {
             // FIX BEHAVIOUR
             thread(start = true, isDaemon = true) {
-                NPCController(ModelCharacterConnectionImpl(level.map, it.character), it.behaviour).run()
+                NPCController(ModelCharacterConnectionImpl(level, it.character), it.behaviour).run()
             }
         }
     }
