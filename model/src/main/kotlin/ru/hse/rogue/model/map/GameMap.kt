@@ -2,6 +2,7 @@ package ru.hse.rogue.model.map
 
 import ru.hse.rogue.model.gameobject.*
 import ru.hse.rogue.model.gameobject.character.CharacterImpl
+import ru.hse.rogue.model.gameobject.character.CloneableCharacter
 import ru.hse.rogue.model.utils.*
 
 
@@ -78,7 +79,12 @@ class GameMap(val width: Int, val height: Int) {
         val (character, pos) = searchObject(characterId) ?: return false
         if (character !is CharacterImpl)
             throw RuntimeException("Searchable object with given id isn't Character")
+        if (character is CloneableCharacter) {
 
+            if (character.needToClone()) {
+                character
+            }
+        }
         val dirPos = pos.applyDirection(direction)
         if (!dirPos.isInBounds(width, height))
             return false
@@ -86,7 +92,7 @@ class GameMap(val width: Int, val height: Int) {
         if (dirObject is CharacterImpl) {
             return attack(characterId, direction)
         }
-        if (!dirPos.isInBounds(width, height) || dirObject is Wall)
+        if (dirObject is Wall)
             return false
         if (dirObject is Inventory) {
             character.pickInventory(dirObject)
@@ -94,6 +100,21 @@ class GameMap(val width: Int, val height: Int) {
         }
         this[dirPos] = this.pop(pos)
         return true
+    }
+
+    private fun tryToSplit(characterId: SearchId) {
+        val (character, pos) = searchObject(characterId) ?: return
+        if (character is CloneableCharacter) {
+            if (character.needToClone()) {
+                for (direction in Direction.values()) {
+                    val dirPosition = pos.applyDirection(direction)
+                    val dirObject = this[dirPosition].last()
+                    if (dirObject is FreeSpace) {
+                        this[dirPosition] = character.clone()
+                    }
+                }
+            }
+        }
     }
 }
 

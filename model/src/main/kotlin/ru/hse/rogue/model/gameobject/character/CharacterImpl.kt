@@ -8,13 +8,13 @@ import kotlin.random.Random.Default.nextDouble
 
 
 /** [Character] implementation class. May be player or NPC with start health */
-internal class CharacterImpl(startHealth: UInt, override val presentationId: PresentationId = "Hero") : Character {
+open class CharacterImpl(startHealth: UInt, override val presentationId: PresentationId = "Hero") : Character {
     private var _curHealth: UInt = startHealth
 
-    override var curExperience: UInt = 0u
+    final override var curExperience: UInt = 0u
         private set
 
-    override var curLevel: UInt = 1u
+    final override var curLevel: UInt = 1u
         private set
 
     /** Current health of the character*/
