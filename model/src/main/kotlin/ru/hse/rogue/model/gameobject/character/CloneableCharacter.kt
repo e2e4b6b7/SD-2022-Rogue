@@ -3,6 +3,7 @@ package ru.hse.rogue.model.gameobject.character
 import ru.hse.rogue.model.gameobject.PresentationId
 import kotlin.random.Random
 
+/** Character which is able to clone */
 class CloneableCharacter(
     startHealth: UInt,
     private val probability: Double = 0.03,
@@ -11,6 +12,7 @@ class CloneableCharacter(
     CharacterImpl(startHealth, PresentationId()),
     Cloneable {
 
+    /** Does character need to clone */
     fun needToClone(): Boolean {
         return Random.nextDouble() < probability
     }
