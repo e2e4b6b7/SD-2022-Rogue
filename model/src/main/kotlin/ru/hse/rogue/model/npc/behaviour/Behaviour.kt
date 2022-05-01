@@ -9,7 +9,7 @@ import ru.hse.rogue.model.npc.NPCController
 import kotlin.concurrent.thread
 
 /** Interface that is responsible for what actions character will do*/
-interface Behaviour : Cloneable {
+interface Behaviour {
     /** Make an action based on modelConnection */
     fun doAnything(modelConnection: ModelCharacterConnection)
 
@@ -19,13 +19,12 @@ interface Behaviour : Cloneable {
             if (character.needToClone()) {
                 val cloneCharacter = character.clone()
                 if (modelConnection.addGameObjectNearGameAnotherObject(character.id, cloneCharacter)) {
-                    val cloneBehaviour = this.clone()
-                    modelConnection.level.mobs.add(Mob(cloneCharacter, cloneBehaviour))
+                    modelConnection.level.mobs.add(Mob(cloneCharacter, this))
                     thread(start = true, isDaemon = true) {
                         NPCController(
                             ModelCharacterConnectionImpl(
                                 modelConnection.level, cloneCharacter
-                            ), cloneBehaviour
+                            ), this
                         ).run()
                     }
                 }
@@ -33,9 +32,6 @@ interface Behaviour : Cloneable {
         }
     }
 
-    override fun clone(): Behaviour {
-        return super.clone() as Behaviour
-    }
 
     companion object {
         fun createRandomBehaviour(player: ImmutableCharacter): Behaviour {
