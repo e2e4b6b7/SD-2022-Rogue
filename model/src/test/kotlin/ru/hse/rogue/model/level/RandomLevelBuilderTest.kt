@@ -4,10 +4,13 @@ import org.junit.jupiter.api.Test
 import ru.hse.rogue.model.gameobject.FreeSpace
 import ru.hse.rogue.model.gameobject.Wall
 import ru.hse.rogue.model.gameobject.character.CharacterImpl
+import ru.hse.rogue.model.level.builder.RandomLevelBuilder
+import ru.hse.rogue.model.level.inventoryfactory.MedievalInventoryFactory
+import ru.hse.rogue.model.level.mobfactory.AnimalFactory
 import ru.hse.rogue.model.map.Position
 import kotlin.test.assertEquals
 
-internal class LevelGeneratorTest {
+internal class RandomLevelBuilderTest {
 
     private val dts = listOf(Pair(1, 0), Pair(-1, 0), Pair(0, -1), Pair(0, 1))
 
@@ -48,12 +51,14 @@ internal class LevelGeneratorTest {
         (0..10).forEach { enemiesCount ->
             (20..30).forEach { width ->
                 (20..30).forEach { height ->
-                    val level = LevelGenerator.generateRandomLevel(
-                        enemiesCount,
-                        5,
-                        width,
-                        height
-                    )
+                    val level = RandomLevelBuilder()
+                        .setNumOfEnemies(enemiesCount)
+                        .setNumOfExtraHealth(5)
+                        .setWidth(width)
+                        .setHeight(height)
+                        .setMobFactory(AnimalFactory)
+                        .setInventoryFactory(MedievalInventoryFactory)
+                        .build()
                     val visited = Array(height) {
                         Array(width) {
                             false
@@ -73,7 +78,6 @@ internal class LevelGeneratorTest {
                         }
                     }
                 }
-
             }
         }
     }

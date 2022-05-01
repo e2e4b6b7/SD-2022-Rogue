@@ -89,5 +89,25 @@
 		"type": "Image",
 		"path": "images/Experience.png",
 		"policy": "Scale"
+	},
+	"Wolf": {
+		"type": "Image",
+		"path": "images/wolf.png",
+		"policy": "Scale"
+	},
+	"Cat": {
+		"type": "Image",
+		"path": "images/cat.png",
+		"policy": "Scale"
+	},
+	"Squirrel": {
+		"type": "Image",
+		"path": "images/squirrel.png",
+		"policy": "Scale"
+	},
+	"Slime": {
+		"type": "Image",
+		"path": "images/slime.png",
+		"policy": "Scale"
 	}
 }

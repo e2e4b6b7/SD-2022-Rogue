@@ -78,7 +78,6 @@ class GameMap(val width: Int, val height: Int) {
         val (character, pos) = searchObject(characterId) ?: return false
         if (character !is CharacterImpl)
             throw RuntimeException("Searchable object with given id isn't Character")
-
         val dirPos = pos.applyDirection(direction)
         if (!dirPos.isInBounds(width, height))
             return false
@@ -86,7 +85,7 @@ class GameMap(val width: Int, val height: Int) {
         if (dirObject is CharacterImpl) {
             return attack(characterId, direction)
         }
-        if (!dirPos.isInBounds(width, height) || dirObject is Wall)
+        if (dirObject is Wall)
             return false
         if (dirObject is Inventory) {
             character.pickInventory(dirObject)
@@ -94,6 +93,27 @@ class GameMap(val width: Int, val height: Int) {
         }
         this[dirPos] = this.pop(pos)
         return true
+    }
+
+    fun addGameObjectNearGameAnotherObject(gameObjectId: SearchId, gameObjectForAddition: GameObject): Boolean {
+        val (_, pos) = searchObject(gameObjectId) ?: return false
+        for (i in 0..5) {
+            val direction = Direction.values().random()
+            val dirPosition = pos.applyDirection(direction)
+            if (addGameObject(dirPosition, gameObjectForAddition)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun addGameObject(position: Position, gameObject: GameObject): Boolean {
+        val dirObject = this[position].last()
+        if (dirObject is FreeSpace) {
+            this[position] = gameObject
+            return true
+        }
+        return false
     }
 }
 

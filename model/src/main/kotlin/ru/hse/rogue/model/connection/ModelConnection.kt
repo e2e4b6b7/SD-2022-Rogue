@@ -2,6 +2,7 @@ package ru.hse.rogue.model.connection
 
 import ru.hse.rogue.model.gameobject.*
 import ru.hse.rogue.model.gameobject.character.ImmutableCharacter
+import ru.hse.rogue.model.level.Level
 import ru.hse.rogue.model.map.*
 import ru.hse.rogue.model.utils.Immutable2DArray
 
@@ -11,11 +12,13 @@ interface ModelViewConnection {
 
 interface ModelCharacterConnection : ModelViewConnection {
     val character: ImmutableCharacter
+    val level: Level
     fun move(direction: Direction): Boolean
     fun useInventory(inventoryId: SearchId): Boolean
     fun disableInventory(inventorId: SearchId): Boolean
     fun getSearchableWithPos(id: SearchId): Pair<Searchable, Position>?
     fun attack(direction: Direction): Boolean
+    fun addGameObjectNearGameAnotherObject(gameObjectId: SearchId, gameObjectForAddition: GameObject): Boolean
 }
 
 interface ModelScenarioControllerConnection : ModelViewConnection {

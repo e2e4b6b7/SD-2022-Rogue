@@ -6,7 +6,7 @@ import ru.hse.rogue.model.npc.behaviour.StunnedBehaviour
 import ru.hse.rogue.model.utils.SleepingTimer
 
 /** Class for representing NPC with [behaviour]. It takes information about game from [ModelCharacterConnection]*/
-class NPC(
+class NPCController(
     private val modelConnection: ModelCharacterConnection,
     private var behaviour: Behaviour,
     sleepTimeMillis: Long = 1000
@@ -22,6 +22,7 @@ class NPC(
                 behaviour = StunnedBehaviour(behaviour)
             }
             behaviour.doAnything(modelConnection)
+            behaviour.tryToSplit(modelConnection)
             sleepingTimer.await()
         }
     }

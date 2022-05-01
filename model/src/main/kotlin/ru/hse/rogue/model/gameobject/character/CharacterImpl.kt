@@ -8,18 +8,18 @@ import kotlin.random.Random.Default.nextDouble
 
 
 /** [Character] implementation class. May be player or NPC with start health */
-internal class CharacterImpl(startHealth: UInt, override val presentationId: PresentationId = "Hero") : Character {
-    private var _curHealth: UInt = startHealth
+open class CharacterImpl(startHealth: UInt, override val presentationId: PresentationId = "Hero") : Character {
+    protected var baseHealth: UInt = startHealth
 
-    override var curExperience: UInt = 0u
+    final override var curExperience: UInt = 0u
         private set
 
-    override var curLevel: UInt = 1u
+    final override var curLevel: UInt = 1u
         private set
 
     /** Current health of the character*/
     override val curHealth: UInt
-        get() = _curHealth + _usingInventory.sumOf {
+        get() = baseHealth + _usingInventory.sumOf {
             it.characteristics.getOrDefault(
                 CharacteristicType.HEALTH,
                 0
@@ -59,13 +59,13 @@ internal class CharacterImpl(startHealth: UInt, override val presentationId: Pre
                 }
             }
         }
-        _curHealth = maxOf(0, _curHealth.toInt() - mutableHarm).toUInt()
+        baseHealth = maxOf(0, baseHealth.toInt() - mutableHarm).toUInt()
     }
 
     override fun experienceIncrease(experienceIncome: UInt) {
         curExperience += experienceIncome
         if (curExperience >= EXP_IN_LEVEL) {
-            _curHealth += HEALTH_LEVEL_REWARD
+            baseHealth += HEALTH_LEVEL_REWARD
         }
         curLevel += (curExperience / EXP_IN_LEVEL)
         curExperience %= EXP_IN_LEVEL

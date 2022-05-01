@@ -1,115 +1,127 @@
-package ru.hse.rogue.model.level
+package ru.hse.rogue.model.level.builder
 
 import ru.hse.rogue.model.gameobject.*
 import ru.hse.rogue.model.gameobject.character.CharacterImpl
-import ru.hse.rogue.model.gameobject.character.ImmutableCharacter
+import ru.hse.rogue.model.level.*
+import ru.hse.rogue.model.level.inventoryfactory.AbstractInventoryFactory
+import ru.hse.rogue.model.level.mobfactory.AbstractMobFactory
 import ru.hse.rogue.model.map.GameMap
-import ru.hse.rogue.model.npc.behaviour.*
 
-/** Class for random generation of levels */
-object LevelGenerator {
+/** Builder of random generated [Level] */
+class RandomLevelBuilder : LevelBuilder {
+    companion object {
+        private const val MIN_ROOM_SIZE = 5
+        private const val MAX_N_TRIES_TO_SPAWN_RANDOM = 10
+        private const val PLAYER_HEALTH = 100u
+    }
 
-    private const val MIN_ROOM_SIZE = 5
-    private const val MAX_N_TRIES_TO_SPAWN_RANDOM = 10
-    private val RANGE_HEALTH = (10u..40u)
-    private const val PLAYER_HEALTH = 100u
+    private lateinit var mobFactory: AbstractMobFactory
+    private lateinit var inventoryFactory: AbstractInventoryFactory
+    private var width: Int? = null
+    private var height: Int? = null
+    private var numOfEnemies: Int = 3
+    private var numOfExtraHealth: Int = 6
+    private var numOfCloths: Int = 3
+    private var numOfArms: Int = 3
 
-    /** Generate level with no more than [enemiesCount] enemies and map with sizes ([width], [height]) */
-    fun generateRandomLevel(enemiesCount: Int, healthBonusCount: Int, width: Int, height: Int): Level {
-        val map = GameMap(width, height)
+    fun setWidth(w: Int): RandomLevelBuilder {
+        width = w
+        return this
+    }
+
+    fun setHeight(h: Int): RandomLevelBuilder {
+        height = h
+        return this
+    }
+
+    fun setNumOfEnemies(enemies: Int): RandomLevelBuilder {
+        numOfEnemies = enemies
+        return this
+    }
+
+    fun setNumOfExtraHealth(extraHealths: Int): RandomLevelBuilder {
+        numOfExtraHealth = extraHealths
+        return this
+    }
+
+    fun setNumOfCloths(cloths: Int): RandomLevelBuilder {
+        numOfCloths = cloths
+        return this
+    }
+
+    fun setNumOfArms(arms: Int): RandomLevelBuilder {
+        numOfArms = arms
+        return this
+    }
+
+    override fun setMobFactory(factory: AbstractMobFactory): RandomLevelBuilder {
+        mobFactory = factory
+        return this
+    }
+
+    override fun setInventoryFactory(factory: AbstractInventoryFactory): RandomLevelBuilder {
+        inventoryFactory = factory
+        return this
+    }
+
+    override fun build(): Level {
+        require(this::mobFactory.isInitialized) { "mob factory must be set" }
+        require(this::inventoryFactory.isInitialized) { "inventory factory must be set" }
+
+        val map = GameMap(
+            requireNotNull(width) { "width must be set" },
+            requireNotNull(height) { "height must be set" }
+        )
+
         val player = CharacterImpl(PLAYER_HEALTH)
         val level = Level(map, player)
-        buildLevel(level, enemiesCount)
+        buildRawLevel(level, numOfEnemies)
+
         addSearchableToMap(level, player)
-        (0 until healthBonusCount).forEach { _ ->
-            addSearchableToMap(level, ExtraHealth(5))
+        (0 until numOfExtraHealth).forEach {
+            addSearchableToMap(level, inventoryFactory.createExtraHealth())
         }
-        addSearchableToMap(level, Cloth("Chain Mail", 50, "Chain Mail"))
-        (0 until 3).forEach { _ ->
-            addSearchableToMap(level, generateWeapon())
+        (0 until numOfArms).forEach {
+            addSearchableToMap(level, inventoryFactory.createArm())
         }
+        (0 until numOfCloths).forEach {
+            addSearchableToMap(level, inventoryFactory.createCloth())
+        }
+
         return level
     }
 
-    private fun generateWeapon(): Arm {
-        return listOf(
-            Arm("Axe", 5, "Axe", 30),
-            Arm("Sword", 7, "Sword", 20),
-            Arm("Dagger", 3, "Dagger", 10)
-        ).random()
-    }
-
-    private fun generateCharacter(player: ImmutableCharacter): Pair<CharacterImpl, Behaviour> {
-        val behaviour = Behaviour.createRandomBehaviour(player)
-        val character: CharacterImpl
-        when (behaviour) {
-            is AggressiveStupidHunter -> {
-                character = CharacterImpl(RANGE_HEALTH.random(), "Zombie")
-                val weapon = Arm("Zombie Arm", 2, "Zombie Arm", 0)
-                character.pickInventory(weapon)
-                character.useInventory(weapon.id)
-            }
-            is CowardWalker -> {
-                character = CharacterImpl(RANGE_HEALTH.random(), "Robot")
-            }
-            is FriendlyStander -> {
-                character = CharacterImpl(RANGE_HEALTH.random(), "Villager")
-            }
-            else -> throw java.lang.IllegalStateException("Unknown type")
-        }
-        return Pair(character, behaviour)
-    }
-
-    private fun tryAddCharacter(x: Int, y: Int, level: Level): Boolean {
+    private fun tryAddMob(x: Int, y: Int, level: Level, mob: Mob): Boolean {
         if (level.map[x, y].last() is FreeSpace) {
-            val (character, behaviour) = generateCharacter(level.player)
-            level.map[x, y] = character
-            level.NPCCharacters.add(Pair(character, behaviour))
+            level.map[x, y] = mob.character
+            level.mobs.add(mob)
             return true
         }
         return false
     }
 
-    private fun addSearchableToMap(level: Level, searchable: Searchable) {
-        for (i in (0..MAX_N_TRIES_TO_SPAWN_RANDOM)) {
-            val x = (1 until level.map.width).random()
-            val y = (1 until level.map.height).random()
-            if (level.map[x, y].last() is FreeSpace) {
-                level.map[x, y] = searchable
-                return
-            }
-        }
-        for (x in (1 until level.map.width)) {
-            for (y in (1 until level.map.height)) {
-                if (level.map[x, y].last() is FreeSpace) {
-                    level.map[x, y] = searchable
-                    return
-                }
-            }
-        }
-    }
-
-    private fun spawnEnemies(
+    private fun spawnMobs(
         widthLeft: Int, widthRight: Int,
         heightLeft: Int, heightRight: Int, level: Level
     ) {
+        val mob = mobFactory.createRandomMob(level.player)
         for (i in (0..MAX_N_TRIES_TO_SPAWN_RANDOM)) {
             val x = (widthLeft + 1 until widthRight).random()
             val y = (heightLeft + 1 until heightRight).random()
-            if (tryAddCharacter(x, y, level)) {
+            if (tryAddMob(x, y, level, mob)) {
                 return
             }
         }
         for (x in widthLeft + 1 until widthRight) {
             for (y in heightLeft + 1 until heightRight) {
-                if (tryAddCharacter(x, y, level)) {
+                if (tryAddMob(x, y, level, mob)) {
                     return
                 }
             }
         }
     }
 
-    private fun buildLevel(level: Level, enemiesToSpawn: Int) {
+    private fun buildRawLevel(level: Level, enemiesToSpawn: Int) {
         val map = level.map
         val width = map.width
         val height = map.height
@@ -152,7 +164,7 @@ object LevelGenerator {
             )
         ) {
             (0 until enemiesToSpawn).forEach { _ ->
-                spawnEnemies(widthLeft, widthRight, heightLeft, heightRight, level)
+                spawnMobs(widthLeft, widthRight, heightLeft, heightRight, level)
             }
             return
         }
@@ -160,7 +172,8 @@ object LevelGenerator {
         val enemiesToSpawnInSecond = enemiesToSpawn - enemiesToSpawnInFirst
 
         if (splitVertically) {
-            val widthSplit = (widthLeft + 1 + MIN_ROOM_SIZE until widthRight - MIN_ROOM_SIZE).random()
+            val widthSplit =
+                (widthLeft + 1 + MIN_ROOM_SIZE until widthRight - MIN_ROOM_SIZE).random()
             (heightLeft + 1 until heightRight).forEach {
                 level.map[widthSplit, it] = Wall
             }
@@ -185,7 +198,8 @@ object LevelGenerator {
                 }
             }
         } else {
-            val heightSplit = (heightLeft + 1 + MIN_ROOM_SIZE until heightRight - MIN_ROOM_SIZE).random()
+            val heightSplit =
+                (heightLeft + 1 + MIN_ROOM_SIZE until heightRight - MIN_ROOM_SIZE).random()
             (widthLeft + 1 until widthRight).forEach {
                 level.map[it, heightSplit] = Wall
             }
@@ -207,6 +221,25 @@ object LevelGenerator {
                 ) {
                     level.map.pop(widthCurrent, heightSplit)
                     break
+                }
+            }
+        }
+    }
+
+    private fun addSearchableToMap(level: Level, searchable: Searchable) {
+        for (i in (0..MAX_N_TRIES_TO_SPAWN_RANDOM)) {
+            val x = (1 until level.map.width).random()
+            val y = (1 until level.map.height).random()
+            if (level.map[x, y].last() is FreeSpace) {
+                level.map[x, y] = searchable
+                return
+            }
+        }
+        for (x in (1 until level.map.width)) {
+            for (y in (1 until level.map.height)) {
+                if (level.map[x, y].last() is FreeSpace) {
+                    level.map[x, y] = searchable
+                    return
                 }
             }
         }
