@@ -6,6 +6,8 @@ import ru.hse.rogue.model.gameobject.character.CloneableCharacter
 import ru.hse.rogue.model.gameobject.character.ImmutableCharacter
 import ru.hse.rogue.model.level.Mob
 import ru.hse.rogue.model.npc.NPCController
+import ru.hse.rogue.model.npc.state.NormalState
+import ru.hse.rogue.model.npc.state.State
 import kotlin.concurrent.thread
 
 /** Interface that is responsible for what actions character will do*/
@@ -19,12 +21,14 @@ interface Behaviour {
             if (character.needToClone()) {
                 val cloneCharacter = character.clone()
                 if (modelConnection.addGameObjectNearGameAnotherObject(character.id, cloneCharacter)) {
-                    modelConnection.level.mobs.add(Mob(cloneCharacter, this))
+                    val newMob = Mob(cloneCharacter, this, NormalState(State.DEFAULT_HEALTH_THRESH_HOLD))
+                    modelConnection.level.mobs.add(newMob)
+
                     thread(start = true, isDaemon = true) {
                         NPCController(
                             ModelCharacterConnectionImpl(
                                 modelConnection.level, cloneCharacter
-                            ), this
+                            ), newMob, modelConnection.level.player
                         ).run()
                     }
                 }

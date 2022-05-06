@@ -47,4 +47,7 @@ interface Character : ImmutableCharacter {
 
     /** Attack another character */
     fun attack(other: Character)
+
+    /** Passive regeneration for character */
+    fun passiveRegeneration()
 }
