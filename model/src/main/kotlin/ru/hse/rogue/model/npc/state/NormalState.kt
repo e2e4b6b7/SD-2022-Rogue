@@ -5,6 +5,7 @@ import ru.hse.rogue.model.level.Mob
 import ru.hse.rogue.model.npc.behaviour.CowardWalker
 import ru.hse.rogue.model.npc.behaviour.StunnedBehaviour
 
+/** State of mob which health is not lower than [healthThreshold]  */
 class NormalState(private val healthThreshold: UInt) : State {
 
     override fun changeState(npc: Mob, player: Character) {
