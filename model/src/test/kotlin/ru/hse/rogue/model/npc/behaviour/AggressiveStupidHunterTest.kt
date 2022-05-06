@@ -9,6 +9,8 @@ import ru.hse.rogue.model.level.Level
 import ru.hse.rogue.model.level.Mob
 import ru.hse.rogue.model.map.GameMap
 import ru.hse.rogue.model.map.Position
+import ru.hse.rogue.model.npc.state.NormalState
+import ru.hse.rogue.model.npc.state.State
 import kotlin.test.*
 
 class AggressiveStupidHunterTest : BehaviourTest {
@@ -26,7 +28,11 @@ class AggressiveStupidHunterTest : BehaviourTest {
         char = CharacterImpl(startHealth)
         playerChar = CharacterImpl(startHealth)
         behaviour = AggressiveStupidHunter(playerChar, 9)
-        level = Level(gameMap, playerChar, mutableListOf(Mob(char, behaviour)))
+        level = Level(
+            gameMap, playerChar, mutableListOf(
+                Mob(char, behaviour, NormalState(State.DEFAULT_HEALTH_THRESH_HOLD))
+            )
+        )
         modelConnection = ModelCharacterConnectionImpl(level, char)
     }
 

@@ -8,7 +8,10 @@ import kotlin.random.Random.Default.nextDouble
 
 
 /** [Character] implementation class. May be player or NPC with start health */
-open class CharacterImpl(startHealth: UInt, override val presentationId: PresentationId = "Hero") : Character {
+open class CharacterImpl(
+    private val startHealth: UInt,
+    override val presentationId: PresentationId = "Hero"
+) : Character {
     protected var baseHealth: UInt = startHealth
 
     final override var curExperience: UInt = 0u
@@ -104,6 +107,10 @@ open class CharacterImpl(startHealth: UInt, override val presentationId: Present
         }
     }
 
+    override fun passiveRegeneration() {
+        baseHealth = minOf(baseHealth + BASE_PASSIVE_REGEN, startHealth)
+    }
+
     override val isStunned: AtomicBoolean = AtomicBoolean(false)
 
     override val id: SearchId = UUID.randomUUID()
@@ -112,5 +119,6 @@ open class CharacterImpl(startHealth: UInt, override val presentationId: Present
         private const val EXP_IN_LEVEL = 10u
         const val EXP_PER_KILL = 1u
         private const val HEALTH_LEVEL_REWARD = 10u
+        private const val BASE_PASSIVE_REGEN = 3u
     }
 }
