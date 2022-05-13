@@ -211,7 +211,7 @@ Hollow Rogue -- это игра в жанре roguelike с тайловой гр
 ![](MODEL_CLASSES.jpg)
 
 ### Game
-Содержит текущее уровень, а также `ModelCharacterConnection`, позволяющий менять управлять
+Содержит текущий уровень, а также `ModelCharacterConnection`, позволяющий менять управлять
 игрой от имени персонажа, которым управляет игрок.
 
 ### ModelViewConnection
